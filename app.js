@@ -16,9 +16,9 @@ var app = express();
 
 // Database setup
 
-connection.query('CREATE DATABASE IF NOT EXISTS db1', function (err) {
+connection.query('CREATE DATABASE IF NOT EXISTS ASSESS_EASY', function (err) {
     if (err) throw err;
-    connection.query('USE db1', function (err) {
+    connection.query('USE ASSESS_EASY', function (err) {
         if (err) throw err;
         connection.query('CREATE TABLE IF NOT EXISTS users('
             + 'id INT NOT NULL AUTO_INCREMENT,'
@@ -39,6 +39,8 @@ app.use(bodyParser());
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/pages/index.html');
 });
+
+app.use(express.static(__dirname + '/public'));
 
 // Update MySQL database
 
