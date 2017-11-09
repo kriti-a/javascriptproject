@@ -4,6 +4,14 @@ var express    = require('express'),
     mysql      = require('mysql'),
 	bodyParser = require('body-parser');
 
+
+
+// set the view engine to ejs -- momal
+app.set('view engine', 'ejs');
+
+
+
+
 // Application initialization
 
 var connection = mysql.createConnection({
@@ -54,5 +62,10 @@ app.post('/users', function (req, res) {
 });
 
 // Begin listening
+
+
+
+
+
 
 app.listen(3000);
