@@ -1,12 +1,18 @@
 {
-    "name": "reddit-node-mysql",
-    "description": "A demo of how to use Express and MySQL together",
-    "author": "Clarence Leung <github@clarle>",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "4.9.5",
-        "mysql": "*",
-        "body-parser": "1.18.2"
-    }
+  "name": "javascriptproject",
+  "version": "1.0.0",
+  "description": "npm install in cmd   \r node app.js in cmd   \r run http://localhost:3000/ on browser",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
