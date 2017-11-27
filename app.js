@@ -3,23 +3,25 @@ var express    = require('express'),
     mysql      = require('mysql'),
 	bodyParser = require('body-parser'),
     path       = require('path');
-
-// Configuration
-// Application initialization
-
 var router = express.Router();
 
 // Application initialization
+var app = express();
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
 var http = require('http').Server(app);
-
 // set the view engine to ejs -- momal
 app.set('view engine', 'ejs');
+//Set up data connection
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : 'root',
+    database : 'ASSESS_EASY'
+});
 //routing the static files. css/js
 app.use(express.static(__dirname + '/public'));
 
@@ -44,26 +46,6 @@ app.get('/', function(req, res) {
 });
 
 
-
-
-
-//----------------------------------------------------
-
-
-
-
-// ------------------Routing / Functions--------------
-//-------------- Please add all functions here -------
-
-
-// Main route sends our HTML file
-
-
-//Kriti's stupid code which is of no use whatsoever
-
-/*app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/views/index.html');
-});*/
 
 
 
