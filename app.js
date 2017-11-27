@@ -1,56 +1,34 @@
 // Module dependencies
 var express    = require('express'),
     mysql      = require('mysql'),
-	bodyParser = require('body-parser');
-// Configuration
-// Application initialization
+	bodyParser = require('body-parser'),
+    path       = require('path');
 var app = express();
+
+var router = express.Router();
+
+// Application initialization
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
 // set the view engine to ejs -- momal
 app.set('view engine', 'ejs');
-//Set up data connection
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    database : 'ASSESS_EASY'
-});
 //routing the static files. css/js
 app.use(express.static(__dirname + '/public'));
-/*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
-// ------------------SQL Queries----------------------
-//----------- Please add all sql strings here --------
+// setting the routes (sub js pages)
+var teachers = require('./routes/teachers.js');
+var index = require('./routes/index.js');
 
+// if there are any pages that start after localhost:8080/ then route them to index
+// this includes the main page and/or about page, contact us page etc ...
+app.use('/',index);
 
-
-
-
-
-
-//----------------------------------------------------
-
-
-
-
-// ------------------Routing / Functions--------------
-//-------------- Please add all functions here -------
-
-
-// Main route sends our HTML file
-app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/views/index.html');
-});
-
-
-//----------------------------------------------------
-
-
-
+// if anything comes after localhost:8080/teachers then route to teachers.js
+app.use('/teacher',teachers);
 
 
 // Begin listening
