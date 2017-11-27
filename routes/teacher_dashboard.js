@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     database : 'ASSESS_EASY'
 });
 
-// set the view engine to ejs -- momal
+// set the view engine to ejs
 app.set('view engine', 'ejs');
 
 
