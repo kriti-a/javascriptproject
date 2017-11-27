@@ -1,0 +1,72 @@
+<% include header.ejs %>
+
+<div id="wrapper">
+
+    <% include side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Student Dashboard</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-group" id="accordion">
+                    <% for(var i=0; i<classesInfo.length; i++) {%>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" id="<%= classesInfo[i].classID %>">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse <%= classesInfo[i].classID %>"> <%= classesInfo[i].name %></a>
+                            </h4>
+                        </div>
+                        <div id="collapse<%= classesInfo[i].classID %>" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div id="morris-area-chart<%= classesInfo[i].classID %>"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+<script>
+    $(document).ready(function () {
+
+        setTimeout(function(){
+            var dataSet = <%= classassesmentInfo %>;
+            <% for(var i=0; i<classesInfo.length; i++) {%>
+            Morris.Area({
+                element: 'morris-area-chart<%= classesInfo[i].classID %>',
+                data: dataSet,
+                xkey: 'caID',
+                ykeys: ['totalMarks'],
+                labels: ['totalMarks'],
+                pointSize: 2,
+                hideHover: 'auto',
+                resize: true,
+                parseTime:false
+            });
+            <% } %>
+        }, 200);
+
+        // Default first accordion open
+        $('.panel-group .panel:first').find('.panel-collapse').addClass('in');
+
+        // For each tab accordion open and close on click
+        $(".panel-heading").on("click", function () {
+            $(".collapse:visible").slideUp();
+            if(!$(this).next().is(":visible")){
+                $(this).next().slideDown(500);
+            }
+            window.dispatchEvent(new Event('resize'));
+
+        });
+    });
+</script>
