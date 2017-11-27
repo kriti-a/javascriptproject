@@ -46,6 +46,11 @@ app.get('/', function(req, res) {
     res.sendfile(__dirname + '/views/index.html');
 });
 
+// adding the sub js file path
+var teacher = require('./routes/teacher_dashboard.js');
+
+app.use('/teacher',teacher);
+
 
 //----------------------------------------------------
 
@@ -54,4 +59,6 @@ app.get('/', function(req, res) {
 
 
 // Begin listening
-app.listen(3000);
+app.listen(3000, function() {
+    console.log('listening on 3000')
+});
