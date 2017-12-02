@@ -21,7 +21,7 @@ app.use(express.static(__dirname + '/public'));
 
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
-//routing to student dashboard
+//routing to student dashboard added
 var studentDashboard = require('./routes/student_dashboard.js');
 app.use('/',studentDashboard);
 /*--------------------------------------------------*/
