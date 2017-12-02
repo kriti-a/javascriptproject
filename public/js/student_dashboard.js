@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 });
 // ------------------SQL Queries----------------------
 
-router.get('/', function(req, res) {
+/*router.get('/', function(req, res) {
     connection.query('select * from classes inner join user_class on user_class.classId = classes.classID inner join users on users.userID = user_class.userId and users.userID = 1;', req.body,
         function (err, result) {
             connection.query('select classes.classID, assessment.assessmentID, assessment.passingMarks, assessment_results.obtainedMarks, users.userID from classes inner join class_assessment on class_assessment.classId = classes.classID inner join assessment on assessment.assessmentID = class_assessment.assessmentID inner join assessment_results on assessment.assessmentID = assessment_results.assessmentID inner join users on users.userID = assessment_results.userID;',
@@ -23,6 +23,6 @@ router.get('/', function(req, res) {
                 });
 
         });
-});
+});*/
 
 module.exports = router;
