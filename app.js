@@ -54,6 +54,7 @@ app.get('/', function(req, res) {
 // setting the routes (sub js pages)
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
+var teacher_dashboard = require('./routes/teacher_dashboard.js');
 
 // if there are any pages that start after localhost:8080/ then route them to index
 // this includes the main page and/or about page, contact us page etc ...
@@ -61,7 +62,8 @@ app.use('/',index);
 
 // if anything comes after localhost:8080/teachers then route to teachers.js
 app.use('/teacher',teachers);
-
+//route to Kavya's js file
+app.use('/teacher_d',teacher_dashboard);
 
 // Begin listening
 app.listen(3000);
