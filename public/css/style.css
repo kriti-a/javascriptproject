@@ -2,6 +2,23 @@
 background-color: white;
 }
 
+/*sidebar css*/
+.sidebar-nav li.dropdown{
+    display: inline-block;
+    width: 100%
+}
+.sidebar-nav li.dropdown ul.dropdown-menu{
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+.sidebar-nav li.dropdown ul.dropdown-menu a{
+    padding: 10px 20px;
+}
 /*teacher dashboard styles*/
 .tcard {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);

@@ -1,11 +1,9 @@
 // Module dependencies
 var express    = require('express'),
     mysql      = require('mysql'),
-    bodyParser = require('body-parser'),
+	bodyParser = require('body-parser'),
     path       = require('path');
 var router = express.Router();
-
-
 
 // Application initialization
 var app = express();
@@ -15,9 +13,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 var http = require('http').Server(app);
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-
 // set the view engine to ejs -- momal
 app.set('view engine', 'ejs');
 //Set up data connection
@@ -27,17 +22,13 @@ var connection = mysql.createConnection({
     password : 'root',
     database : 'ASSESS_EASY'
 });
-
-server.listen(process.env.PORT || 3000);
-console.log("Server is running ... ");
-
 //routing the static files. css/js
 app.use(express.static(__dirname + '/public'));
 
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
 // ------------------SQL Queries----------------------
-//----------- Please add all sql strings here
+//----------- Please add all sql strings here 
 
 app.get('/', function(req, res) {
     connection.query('select * from classes inner join user_class on user_class.classId = classes.classID inner join users on users.userID = user_class.userId and users.userID = 1;', req.body,
@@ -55,6 +46,9 @@ app.get('/', function(req, res) {
 });
 
 
+
+
+
 //----------------------------------------------------
 
 // setting the routes (sub js pages)
@@ -65,6 +59,7 @@ var teacher_dashboard = require('./routes/teacher_dashboard.js');
 // if there are any pages that start after localhost:8080/ then route them to index
 // this includes the main page and/or about page, contact us page etc ...
 app.use('/',index);
+
 
 // if anything comes after localhost:8080/teachers then route to teachers.js
 app.use('/teacher',teachers);
@@ -141,13 +136,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-
-
-
 // Begin listening
-
-/*
-
 app.listen(3000);
-console.log("server started")*/
+console.log("server started")
