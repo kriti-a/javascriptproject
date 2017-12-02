@@ -95,17 +95,27 @@
             </div>
         </div>
 
-        <%result.forEach(function (result) {  %>
+        <%subject.forEach(function (subject) {  %>
         <div class="tcard">
             <div class="tcontainer">
-                <h4><b><%= result.name %></b></h4>
+                <h4><b><%= subject.name %></b></h4>
                 <hr/>
-                <p >Total Tests: </p>
-                <p>Results announced:</p>
-                <p>Pending assessments:</p>
+                <%totalAssess.forEach(function(totalAssess){%>
+                <%if(totalAssess.classID == subject.classID){%>
+                <p >Total Tests:<%=totalAssess.id%> </p>
+                <%}})%>
+                <%announcedRes.forEach(function (announcedRes) { %>
+                <%if (announcedRes.classID == subject.classID){%>
+                <p>Results announced:<%= announcedRes.total%></p>
+                <%}})%>
+                <%pendingResult.forEach(function (pendingResult) { %>
+                <%if(pendingResult.classID == subject.classID){%>
+                <p>Pending assessments:<%= pendingResult.pending%></p>
+                <%}})%>
             </div>
         </div>
       <%})%>
+
     </div>
 </div>
 
