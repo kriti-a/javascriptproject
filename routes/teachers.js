@@ -20,7 +20,7 @@ var loggedInTeacher = 1; //This should be a dynamic value coming from the sessio
 
 var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + loggedInTeacher; //To get all the classes taught by a teacher
 var sqlGetClassTests = 'SELECT * FROM assessment where assessment.assessmentID = (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = ?)'; //To get all the tests belonging to one class
-var testQuery = 'SELECT * FROM assessment where assessment.assessmentID = 1';
+
 //----------------------------------------------------
 
 //Function to get a particular teacher's classes
@@ -39,6 +39,12 @@ router.get('/viewTests/:id', function (req, res) {
         if(err) throw err;
         res.render('teacher/viewTests', {result: result})
     });
+});
+
+//Function where a teacher can add new classes
+
+router.get('/addClass', function (req, res) {
+    res.render('teacher/addClass');
 });
 
 
