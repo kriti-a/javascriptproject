@@ -1,6 +1,6 @@
 var express    = require('express'),
     mysql      = require('mysql'),
-	bodyParser = require('body-parser'),
+    bodyParser = require('body-parser'),
     path       = require('path');
 var router = express.Router();
 
@@ -27,7 +27,7 @@ app.use(express.static(__dirname + '/public'));
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
 // ------------------SQL Queries----------------------
-//----------- Please add all sql strings here 
+//----------- Please add all sql strings here
 
 app.get('/', function(req, res) {
     connection.query('select * from classes inner join user_class on user_class.classId = classes.classID inner join users on users.userID = user_class.userId and users.userID = 1;', req.body,
