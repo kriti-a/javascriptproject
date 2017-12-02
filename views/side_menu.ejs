@@ -89,9 +89,9 @@
                 <li>
                     <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
-                <li>
-                    <button type="button" onclick="viewClasses()" class="btn btn-link"><a><i class="fa fa-table fa-fw"></i> Class<span class="fa arrow"></span></a></button>
-                    <ul class="nav nav-second-level">
+                <li class = "dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" onclick="viewClasses()"><i class="fa fa-table fa-fw"></i> Class<span class="fa arrow"></span></a>
+                    <ul class="dropdown-menu"  role="menu">
                         <li>
                             <button type="button" onclick="addNewClass()" class="btn btn-link"><a>Create New</a></button>
                         </li>

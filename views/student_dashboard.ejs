@@ -41,18 +41,38 @@
 
         setTimeout(function(){
             var dataSet = <%= classassesmentInfo %>;
-            <% for(var i=0; i<classesInfo.length; i++) {%>
-            Morris.Area({
-                element: 'morris-area-chart<%= classesInfo[i].classID %>',
-                data: dataSet,
-                xkey: 'caID',
-                ykeys: ['totalMarks'],
-                labels: ['totalMarks'],
-                pointSize: 2,
-                hideHover: 'auto',
-                resize: true,
-                parseTime:false
-            });
+            var obj = {};
+            <% for(var i=0; i<classesInfo.length; i++) {%>;
+            var j = '<%= i%>';
+            var subdata = dataSet[j];
+            if(obj[subdata.classID]){
+                obj[subdata.classID].push(subdata);
+            }
+            else{
+                obj[subdata.classID] = [];
+                obj[subdata.classID].push(subdata);
+            }
+            if(obj[subdata.classID]) {
+                $('#morris-area-chart' +  subdata.classID).html('');
+                Morris.Area({
+                    element: 'morris-area-chart' + subdata.classID,
+                    data:obj[subdata.classID],
+                    xkey: 'assessmentID',
+                    ykeys: ['obtainedMarks'],
+                    labels: ['obtainedMarks'],
+                    pointSize: 3,
+                    hideHover: 'auto',
+                    resize: true,
+                    parseTime:false,
+                    xLabels: 'day',
+                    xLabelFormat: function (x) {
+                        var xlabel = ['assessmentID'];
+                        var labelx = xlabel[ x.toString()];
+                        return labelx;
+                    }
+                });
+            }
+
             <% } %>
         }, 200);
 
