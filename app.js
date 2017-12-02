@@ -1,11 +1,9 @@
 // Module dependencies
 var express    = require('express'),
     mysql      = require('mysql'),
-    bodyParser = require('body-parser'),
+	bodyParser = require('body-parser'),
     path       = require('path');
 var router = express.Router();
-
-
 
 // Application initialization
 var app = express();
@@ -15,22 +13,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 var http = require('http').Server(app);
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-
 // set the view engine to ejs -- momal
 app.set('view engine', 'ejs');
-
-//Set up data connection
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    database : 'ASSESS_EASY'
-});
-
-server.listen(process.env.PORT || 3000);
-console.log("Server is running ... ");
 
 //routing the static files. css/js
 app.use(express.static(__dirname + '/public'));
@@ -42,70 +26,22 @@ var studentDashboard = require('./routes/student_dashboard.js');
 app.use('/',studentDashboard);
 /*--------------------------------------------------*/
 
-// ------------------SQL Queries----------------------
-//----------- Please add all sql strings here
-
-
-
-
-//----------------------------------------------------
-
 // setting the routes (sub js pages)
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
 var teacher_dashboard = require('./routes/teacher_dashboard.js');
 
+// if there are any pages that start after localhost:8080/ then route them to index
+// this includes the main page and/or about page, contact us page etc ...
+app.use('/',index);
+
+// if anything comes after localhost:8080/teachers then route to teachers.js
+app.use('/teacher',teachers);
+
+// way to teachers dashboard
+app.use('/teacher_d',teacher_dashboard);
 
 //-----------------------------------------------------------------------------------
-/*
-* This is the chat code
-* It is the first draft
-* This code would be removed from app.js
-* and added in its own file once because right now it's being a little b*tch when i add it in www
-* */
-app.get('/chat', function (req, res) {
-    res.render('chat');
-});
-users = [];
-connections = [];
-io.sockets.on('connection',function(socket) {
-    connections.push(socket);
-    console.log('Connected: %s sockets connected', connections.length);
-
-
-    //Disconnect
-    socket.on('disconnect', function (data) {
-
-        users.splice(users.indexOf(socket.username),1);
-        updateUsernames();
-        connections.splice(connections.indexOf(socket, 1));
-        console.log('Disconnected: %s sockets connected', connections.length)
-    });
-
-    //Send Message
-    socket.on('send message', function (data) {
-        console.log(data);
-        io.sockets.emit('new message',{msg: data, user: socket.username});
-    });
-
-
-    //New User
-    socket.on('new user', function (data, callback) {
-        callback(true);
-        socket.username = data;
-        users.push(socket.username);
-        updateUsernames();
-    });
-
-    function updateUsernames() {
-        io.sockets.emit('get users', users);
-    }
-
-
-});
-
-// ---------------- CHAT ENDS HERE --------------------------------
-
 
 
 app.use(function(req, res, next) {
@@ -126,14 +62,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-
-// if there are any pages that start after localhost:8080/ then route them to index
-// this includes the main page and/or about page, contact us page etc ...
-app.use('/',index);
-
-// if anything comes after localhost:8080/teachers then route to teachers.js
-app.use('/teacher',teachers);
-app.use('/teacher_dashboard',teacher_dashboard);
-
-
+// Begin listening
+app.listen(3000);
+console.log("server started")
