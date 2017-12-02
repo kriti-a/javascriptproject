@@ -60,62 +60,13 @@ var teacher_dashboard = require('./routes/teacher_dashboard.js');
 // this includes the main page and/or about page, contact us page etc ...
 app.use('/',index);
 
-
 // if anything comes after localhost:8080/teachers then route to teachers.js
 app.use('/teacher',teachers);
 
+// way to teachers dashboard
 app.use('/teacher_d',teacher_dashboard);
 
 //-----------------------------------------------------------------------------------
-/*
-* This is the chat code
-* It is the first draft
-* This code would be removed from app.js
-* and added in its own file once because right now it's being a little b*tch when i add it in www
-* */
-app.get('/chat', function (req, res) {
-    res.render('chat');
-});
-users = [];
-connections = [];
-io.sockets.on('connection',function(socket) {
-    connections.push(socket);
-    console.log('Connected: %s sockets connected', connections.length);
-
-
-    //Disconnect
-    socket.on('disconnect', function (data) {
-
-        users.splice(users.indexOf(socket.username),1);
-        updateUsernames();
-        connections.splice(connections.indexOf(socket, 1));
-        console.log('Disconnected: %s sockets connected', connections.length)
-    });
-
-    //Send Message
-    socket.on('send message', function (data) {
-        console.log(data);
-        io.sockets.emit('new message',{msg: data, user: socket.username});
-    });
-
-
-    //New User
-    socket.on('new user', function (data, callback) {
-        callback(true);
-        socket.username = data;
-        users.push(socket.username);
-        updateUsernames();
-    });
-
-    function updateUsernames() {
-        io.sockets.emit('get users', users);
-    }
-
-
-});
-
-// ---------------- CHAT ENDS HERE --------------------------------
-
 
 
 app.use(function(req, res, next) {
