@@ -62,6 +62,14 @@ var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
 var teacher_dashboard = require('./routes/teacher_dashboard.js');
 
+// if there are any pages that start after localhost:8080/ then route them to index
+// this includes the main page and/or about page, contact us page etc ...
+app.use('/',index);
+
+// if anything comes after localhost:8080/teachers then route to teachers.js
+app.use('/teacher',teachers);
+
+app.use('/teacher_d',teacher_dashboard);
 
 //-----------------------------------------------------------------------------------
 /*
@@ -135,18 +143,11 @@ app.use(function(err, req, res, next) {
 
 
 
-// if there are any pages that start after localhost:8080/ then route them to index
-// this includes the main page and/or about page, contact us page etc ...
-app.use('/',index);
 
-// if anything comes after localhost:8080/teachers then route to teachers.js
-app.use('/teacher',teachers);
-app.use('/teacher_dashboard',teacher_dashboard);
 
 // Begin listening
 
 /*
 
->>>>>>> 5d16213889cf40ec1e10998289d4a0615ec89128
 app.listen(3000);
 console.log("server started")*/
