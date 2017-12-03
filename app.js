@@ -30,6 +30,7 @@ app.use('/',studentDashboard);
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
 var teacher_dashboard = require('./routes/teacher_dashboard.js');
+var chats = require('./routes/chatroom');
 
 // if there are any pages that start after localhost:8080/ then route them to index
 // this includes the main page and/or about page, contact us page etc ...
@@ -40,6 +41,10 @@ app.use('/teacher',teachers);
 
 // way to teachers dashboard
 app.use('/teacher_d',teacher_dashboard);
+
+// -----For the Chat
+
+app.use('/chat', chats);
 
 //-----------------------------------------------------------------------------------
 
@@ -62,6 +67,10 @@ app.use(function(err, req, res, next) {
 });
 
 
-// Begin listening
-app.listen(3000);
-console.log("server started")
+// ---- Changed the server start app to accommodate the chat app.
+//---This does not affect the app.
+server.listen(process.env.PORT || 3000);
+console.log("Server is running ... ");
+
+// ---- Do not remove this commented code -- Momal
+//module.exports = app;
