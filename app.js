@@ -30,6 +30,9 @@ console.log("Server is running ... ");
 app.set('views', path.join(__dirname, 'views'));
 
 
+//routing to student dashboard added
+var studentDashboard = require('./routes/student_dashboard.js');
+app.use('/',studentDashboard);
 // setting the routes (sub js pages)
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
@@ -51,9 +54,6 @@ app.use('/teacher_d',teacher_dashboard);
 
 app.use('/chat', chats);
 
-//routing to student dashboard
-var studentDashboard = require('./routes/student_dashboard.js');
-app.use('/',studentDashboard);
 
 
 //-----------------------------------------------------------------------------------
