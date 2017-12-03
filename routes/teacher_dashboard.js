@@ -9,7 +9,6 @@ app.set('view engine', 'ejs');
 var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
-    password : 'root',
     database : 'ASSESS_EASY'
 });
 
@@ -38,12 +37,12 @@ router.get('/', function(req, res){
                 if(err)throw err;
                 console.log(announcedRes);
 
-                    connection.query(pendingResultQuery,function (err,pendingResult) {
-                        if(err)throw err;
-                        console.log(pendingResult);
+                connection.query(pendingResultQuery,function (err,pendingResult) {
+                    if(err)throw err;
+                    console.log(pendingResult);
 
-                        res.render('teacher_dashboard',{subject:subject
-                            ,totalAssess:totalAssess,announcedRes:announcedRes,pendingResult:pendingResult})
+                    res.render('teacher_dashboard',{subject:subject
+                        ,totalAssess:totalAssess,announcedRes:announcedRes,pendingResult:pendingResult})
 
                 });
             });
