@@ -4,6 +4,8 @@
 module.exports = function (io) {
     users = [];
     connections = [];
+    var cookieParser = require('cookie-parser');
+    var session = require('express-session');
     io.on('connection', function (socket) {
         connections.push(socket);
         console.log('Connected: %s sockets connected', connections.length);

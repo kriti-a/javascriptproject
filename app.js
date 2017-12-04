@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 var http = require('http').Server(app);
+
 // set the view engine to ejs -- momal
 app.set('view engine', 'ejs');
 
