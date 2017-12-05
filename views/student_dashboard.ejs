@@ -59,19 +59,21 @@
                 Morris.Area({
                     element: 'morris-area-chart' + subdata.classID,
                     data:obj[subdata.classID],
-                    xkey: 'assessmentID',
+                    xkey: 'passingMarks',
+                    xLabels: 'passingMarks',
+                    xLabelFormat: function (x) {
+                        var val = 0;
+                        if(x && x.src && x.src.passingMarks) {
+                            val = x.src.passingMarks;
+                        }
+                        return "Passing Marks: "+ val;
+                        },
                     ykeys: ['obtainedMarks'],
-                    labels: ['obtainedMarks'],
+                    labels: ['Obtained Marks'],
                     pointSize: 3,
                     hideHover: 'auto',
                     resize: true,
-                    parseTime:false,
-                    xLabels: 'day',
-                    xLabelFormat: function (x) {
-                        var xlabel = ['assessmentID'];
-                        var labelx = xlabel[ x.toString()];
-                        return labelx;
-                    }
+                    parseTime:false
                 });
             }
 
