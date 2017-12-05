@@ -89,14 +89,18 @@
                 <li>
                     <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
-                <li class = "dropdown">
-                    <button type="button" onclick="viewClasses()" class="btn btn-link"><a><i class="fa fa-table fa-fw"></i> Class<span class="fa arrow"></span></a></button>
+                <li>
+                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Class<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <button type="button" onclick="addNewClass()" class="btn btn-link"><a>Create New</a></button>
+                           <button type="button" onclick="viewClasses()" class="btn btn-link" style="color: #2e6da4">View All</button>
+                            <!-- <a href="teacher/viewClasses.ejs">View All</a>-->
                         </li>
                         <li>
-                            <a href="">Edit Existing</a>
+                            <button type="button" onclick="addNewClass()" class="btn btn-link" style="color: #2e6da4">Create New</button>
+                        </li>
+                        <li>
+                            <button type="button" onclick="" class="btn btn-link" style="color: #2e6da4">Edit Existing</button>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->

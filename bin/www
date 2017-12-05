@@ -94,5 +94,5 @@ function onListening() {
 }
 
 
-var sock = require('../routes/chat');
+var sock = require('../routes/chats');
 sock(io);

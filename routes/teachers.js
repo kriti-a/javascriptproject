@@ -19,8 +19,8 @@ var loggedInTeacher = 1; //This should be a dynamic value coming from the sessio
 //----------- Please add all sql strings here --------
 
 var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + loggedInTeacher; //To get all the classes taught by a teacher
-var sqlGetClassTests = 'SELECT * FROM assessment where assessment.assessmentID = (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = ?)'; //To get all the tests belonging to one class
-
+var sqlGetClassTests = 'SELECT * FROM assessment where assessment.assessmentID IN (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = ?)'; //To get all the tests belonging to one class
+var sqlInsertClass = 'insert into assess_easy.classes (name, createdOn, createdBy) values (?, now(), ' + loggedInTeacher + ');'; //This query will insert a new class to the classes table
 //----------------------------------------------------
 
 //Function to get a particular teacher's classes
@@ -45,6 +45,34 @@ router.get('/viewTests/:id', function (req, res) {
 
 router.get('/addClass', function (req, res) {
     res.render('teacher/addClass');
+});
+
+//Function to add new class to the database
+
+router.get('/addClass', function (req, res) {
+   var test = req.query.lg;
+   if(test == 'sc'){
+       res.render('teacher/addClass', {message : 'success'});
+   }
+   else if(test == 'f1'){
+       res.render('teacher/addClass', {message : 'error'});
+   }
+   else if(test == null){
+       res.render('teacher/addClass');
+   }
+});
+
+router.post('/addclassaction', function (req, res) {
+    var name = req.body.className;
+    if(name.toString() !== ''){
+    connection.query(sqlInsertClass, [name], function (err, result, fields) {
+          if(err) throw err;
+          res.redirect('addClass?lg=sc');
+       });
+   }
+   else{
+       res.redirect('addClass?lg=f1');
+   }
 });
 
 
