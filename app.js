@@ -56,9 +56,8 @@ app.use('/teacher_d',teacher_dashboard);
 app.use('/chat', chats);
 
 
-
 //-----------------------------------------------------------------------------------
-
+/*
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
@@ -75,6 +74,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+*/
 
 // ---- Do not remove this commented code -- Momal
 //module.exports = app;

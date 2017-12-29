@@ -15,18 +15,10 @@
 
 <body>
 
-<% try
-{  var myvar = message.toString();
-if (myvar.toString()=='success'){%><script>alert("Class was Added Successfully");</script><%}
-else{%><script> alert("Error. Please try again!");</script><%}
-}
-catch(err)
-{
 
-}
-%>
 
 <div id="wrapper">
+
 
     <% include ../side_menu.ejs %>
 
@@ -36,6 +28,17 @@ catch(err)
             <div class="col-lg-12">
                 <h3>Add New Class</h3>
             </div>
+            <% try
+            {  var myvar = message.toString();
+            console.log(message.toString());
+            if (myvar.toString()=='success'){%><script>alert("Class was Added Successfully");</script><%}
+            else{%><script> alert("Error. Please try again!");</script><%}
+            }
+            catch(err)
+            {
+
+            }
+            %>
             <form action="addclassaction" method="post">
                 Class Name: <input type="text" name="className[]" style="width: 750px" class="form-control" placeholder="Class Name" autofocus>
                 <button class="btn btn-success" type="submit">Add</button>

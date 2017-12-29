@@ -1,0 +1,39 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+    <div class="row">
+        <form action="addtfquestion" method="post">
+             Question: <input type="text" name="question[]" style="width: 750px" class="form-control" placeholder="Question" autofocus>
+             Correct Answer: <input type="text" name="correctAnswer[]" style="width: 750px" class="form-control" placeholder="Correct Answer" autofocus>
+             Marks: <input type="text" name="marks[]" style="width: 750px" class="form-control" placeholder="marks" autofocus>
+
+             <button class="btn btn-success" type="submit">Add another</button>
+             <button class="btn btn-success" type="submit">Finish</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+
+
+
+</html>

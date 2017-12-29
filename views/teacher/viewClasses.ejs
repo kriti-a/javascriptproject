@@ -1,16 +1,23 @@
 <% include ../header.ejs %>
 <head>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/metisMenu.min.css" rel="stylesheet">
-    <link href="../css/sb-admin-2.css" rel="stylesheet">
-    <link href="../css/morris.css" rel="stylesheet">
-    <link href="../css/font-awesome.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
     <!-- scripts -->
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/metisMenu.min.js"></script>
-    <script src="../js/raphael.min.js"></script>
-    <script src="../js/morris.min.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+
+    <script type="text/javascript" src="/routes/teachers.js"></script>
+    <script>
+        function SetUpdateClassValue() {
+            alert("HI");
+        }
+    </script>
 </head>
 
 <body>
@@ -23,22 +30,25 @@
     <div id="page-wrapper">
         <!--displaying the classes here-->
         <div class="container">
-            <table class="table table-striped table-hover table-bordered">
+            <table class="table table-hover">
                 <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
                     <th>Class Name</th>
-                    <th>Created On</th>
-                    <th>Created By</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <% result.forEach((result) => { %>
                 <tr>
-                    <td><a href="viewTests/<%= result.classID %>"><%= result.classID %></a></td>
                     <td><%= result.name %></td>
-                    <td><%= result.createdOn %></td>
-                    <td><%= result.createdBy %></td>
+                    <td>
+                        <a href="viewTests/<%= result.classID %>"><button type="button" class="btn btn-success">View Tests</button></a>
+                        <a href="addTest"><button type="button" class="btn btn-primary">Create New Test</button></a>
+                    </td>
+                    <td><a href="viewClasses/<%= result.classID %>"><button type="button" class="btn btn-warning">Delete Class</button></a></td>
+                    <td><a href="editClass"><button type="button" class="btn btn-primary" onclick="SetUpdateClassValue()">Update Class</button></a></td>
                 </tr>
                 <% }) %>
                 </tbody>
