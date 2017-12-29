@@ -1,7 +1,7 @@
-// Module dependencies
 var express    = require('express'),
     mysql      = require('mysql'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    path       = require('path');
 var expressValidator = require('express-validator');
 var router = express.Router();
 
@@ -20,6 +20,8 @@ var users = require('./routes/users');
 // Configuration
 // Application initialization
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -29,17 +31,16 @@ app.use(bodyParser.urlencoded({
 app.use(expressValidator());
 
 var http = require('http').Server(app);
+
 // set the view engine to ejs -- momal
 app.set('view engine', 'ejs');
-//Set up data connection
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    database : 'ASSESS_EASY'
-});
+
 //routing the static files. css/js
 app.use(express.static(__dirname + '/public'));
+
+server.listen(process.env.PORT || 3000);
+console.log("Server is running ... ");
+
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
 
@@ -71,51 +72,54 @@ app.use('/users', users);
 
 //ok ok ok to be taken to registration.js
 
+/*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
+app.set('views', path.join(__dirname, 'views'));
 
 
-//----------- Please add all sql strings here 
+//routing to student dashboard added
+var studentDashboard = require('./routes/student_dashboard.js');
+app.use('/',studentDashboard);
+// setting the routes (sub js pages)
+var teachers = require('./routes/teachers.js');
+var index = require('./routes/index.js');
+var teacher_dashboard = require('./routes/teacher_dashboard.js');
+var chats = require('./routes/chatroom');
 
-/*app.get('/', function(req, res) {
-    connection.query('select * from classes inner join user_class on user_class.classId = classes.classID inner join users on users.userID = user_class.userId and users.userID = 1;', req.body,
-        function (err, result) {
 
-            connection.query('select classes.classID, class_assessment.caID, assessment.totalMarks, assessment.passingMarks from classes inner join class_assessment on class_assessment.classId = classes.classID inner join assessment on assessment.assessmentID = class_assessment.assessmentID;',
-                function (err, classAssessment) {
-                    if (err) throw err;
-                    var classAssessmentJson =JSON.stringify(classAssessment);
-                    var jsonData = classAssessmentJson.replace(/\"([^(\")"]+)\":/g,"$1:");
-                    res.render('student_dashboard', {classesInfo: result, classassesmentInfo: jsonData});
-                });
+// if there are any pages that start after localhost:8080/ then route them to index
+// this includes the main page and/or about page, contact us page etc ...
+app.use('/',index);
 
-        });
+// if anything comes after localhost:8080/teachers then route to teachers.js
+app.use('/teacher',teachers);
+
+// way to teachers dashboard
+app.use('/teacher_d',teacher_dashboard);
+
+// -----For the Chat
+app.use('/chat', chats);
+
+
+
+//-----------------------------------------------------------------------------------
+
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
-*/
+
+// error handler
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
 
-
-//----------------------------------------------------
-
-
-
-// Main route sends our HTML file
-/*app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/views/index.html');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
-*/
 
-
-// ------------------Routing / Functions--------------
-
-
-
-//-------------- Please add all functions here -------
-
-
-//----------------------------------------------------
-    //
-
-
-
-// Begin listening
-app.listen(3000);
-console.log("server started")
+// ---- Do not remove this commented code -- Momal
+//module.exports = app;

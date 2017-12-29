@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -88,14 +89,18 @@
                 <li>
                     <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
-                <li>
-                    <a><i class="fa fa-table fa-fw"></i> Class<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i> Class<span class="fa arrow"></span></a>
+                    <ul class="dropdown-menu"  role="menu">
                         <li>
-                            <a href="">Create New</a>
+                           <a href="javascript:;" onclick="viewClasses()">View All</a>
+                            <!-- <a href="teacher/viewClasses.ejs">View All</a>-->
                         </li>
                         <li>
-                            <a href="">Edit Existing</a>
+                            <a href="javascript:;" onclick="addNewClass()">Create New</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" onclick="">Edit Existing</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->

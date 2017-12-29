@@ -1,0 +1,52 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+</head>
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <!--displaying the classes here-->
+        <div class="container">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Assessment Name</th>
+                    <th>Deadline</th>
+                    <th>Total Marks</th>
+                    <th>Passing Marks</th>
+                    <th>Assessment Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% result.forEach((result) => { %>
+                <tr>
+                    <td><%= result.assessmentID %></td>
+                    <td><%= result.name %></td>
+                    <td><%= result.deadline %></td>
+                    <td><%= result.totalMarks %></td>
+                    <td><%= result.passingMarks %></td>
+                    <td><%= result.assessmentType %></td>
+                </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

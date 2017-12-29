@@ -1,0 +1,55 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/morris.css" rel="stylesheet">
+    <link href="../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/metisMenu.min.js"></script>
+    <script src="../js/raphael.min.js"></script>
+    <script src="../js/morris.min.js"></script>
+</head>
+
+<body>
+
+<% try
+{  var myvar = message.toString();
+if (myvar.toString()=='success'){%><script>alert("Class was Added Successfully");</script><%}
+else{%><script> alert("Error. Please try again!");</script><%}
+}
+catch(err)
+{
+
+}
+%>
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Add New Class</h3>
+            </div>
+            <form action="addclassaction" method="post">
+                Class Name: <input type="text" name="className[]" style="width: 750px" class="form-control" placeholder="Class Name" autofocus>
+                <button class="btn btn-success" type="submit">Add</button>
+            </form>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+
+    </div>
+</div>
+
+
+
+</body>
+
+</html>

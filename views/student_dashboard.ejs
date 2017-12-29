@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-8">
                 <div class="panel-group" id="accordion">
                     <% for(var i=0; i<classesInfo.length; i++) {%>
                     <div class="panel panel-default">
@@ -29,6 +29,26 @@
                     <% } %>
                 </div>
             </div>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-bell fa-fw"></i> Notifications Panel</div>
+                    <div class="panel-body">
+
+                        <div class="list-group">
+                            <% for(var i=0; i<notificationInfo.length; i++) {%>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-comment fa-fw"></i><%= notificationInfo[i].message %>
+                                <span class="pull-right text-muted small"><em><%= moment(notificationInfo[i].createdon).format('Do MMMM, YYYY'); %></em>
+                                </span>
+                            </a>
+                            <% } %>
+                        </div>
+
+                        <!-- /.list-group -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -39,27 +59,53 @@
 <script>
     $(document).ready(function () {
 
+        // For render chart data
+
         setTimeout(function(){
             var dataSet = <%= classassesmentInfo %>;
-            <% for(var i=0; i<classesInfo.length; i++) {%>
-            Morris.Area({
-                element: 'morris-area-chart<%= classesInfo[i].classID %>',
-                data: dataSet,
-                xkey: 'caID',
-                ykeys: ['totalMarks'],
-                labels: ['totalMarks'],
-                pointSize: 2,
-                hideHover: 'auto',
-                resize: true,
-                parseTime:false
-            });
+            var obj = {};
+            <% for(var i=0; i<classesInfo.length; i++) {%>;
+            var j = '<%= i%>';
+            var subdata = dataSet[j];
+            if(obj[subdata.classID]){
+                obj[subdata.classID].push(subdata);
+            }
+            else{
+                obj[subdata.classID] = [];
+                obj[subdata.classID].push(subdata);
+            }
+            if(obj[subdata.classID]) {
+                $('#morris-area-chart' +  subdata.classID).html('');
+                Morris.Area({
+                    element: 'morris-area-chart' + subdata.classID,
+                    data:obj[subdata.classID],
+                    xkey: 'passingMarks',
+                    xLabels: 'passingMarks',
+                    xLabelFormat: function (x) {
+                        var val = 0;
+                        if(x && x.src && x.src.passingMarks) {
+                            val = x.src.passingMarks;
+                        }
+                        return "Passing Marks: "+ val;
+                        },
+                    ykeys: ['obtainedMarks'],
+                    labels: ['Obtained Marks'],
+                    pointSize: 3,
+                    hideHover: 'auto',
+                    resize: true,
+                    parseTime:false
+                });
+            }
+
             <% } %>
         }, 200);
 
         // Default first accordion open
+		
         $('.panel-group .panel:first').find('.panel-collapse').addClass('in');
 
         // For each tab accordion open and close on click
+		
         $(".panel-heading").on("click", function () {
             $(".collapse:visible").slideUp();
             if(!$(this).next().is(":visible")){
