@@ -15,6 +15,16 @@
 
 <body>
 
+<% try
+{  var myvar = message.toString();
+if (myvar.toString()=='success'){%><script>alert("Class was Added Successfully");</script><%}
+else{%><script> alert("Error. Please try again!");</script><%}
+}
+catch(err)
+{
+
+}
+%>
 
 <div id="wrapper">
 
