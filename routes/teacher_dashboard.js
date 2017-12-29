@@ -48,7 +48,7 @@ router.get('/', function(req, res){
                     if(err)throw err;
                     console.log(pendingResult);
 
-                    
+
                         connection.query(passStats,function (err,pass) {
                             if(err)throw err;
                             console.log(pass);
