@@ -94,32 +94,65 @@
                 <h1 class="page-header">Teacher Dashboard</h1>
             </div>
         </div>
+        <p class="subHeadings" style="font-size: 30px;">Subjects you are incharge of :</p>
+        <% var status = message.toString();
+            if(status == 'empty'){%>#
 
-        <%subject.forEach(function (subject) {  %>
-        <div class="tcard">
-            <div class="tcontainer">
-                <h4><b><%= subject.name %></b></h4>
-                <hr/>
-                <%totalAssess.forEach(function(totalAssess){%>
-                <%if(totalAssess.classID == subject.classID){%>
-                <p >Total Tests:<%=totalAssess.id%> </p>
-                <%}})%>
-                <%announcedRes.forEach(function (announcedRes) { %>
-                <%if (announcedRes.classID == subject.classID){%>
-                <p>Results announced:<%= announcedRes.total%></p>
-                <%}})%>
-                <%pendingResult.forEach(function (pendingResult) { %>
-                <%if(pendingResult.classID == subject.classID){%>
-                <p>Pending assessments:<%= pendingResult.pending%></p>
-                <%}})%>
-            </div>
+                <div class="cardContainer">
+
+                    <p class="noRows"> ----- temp : no rows returned -----</p>
+
+                </div>
+
+        <%}else if(status == 'available'){subject.forEach(function (subject) {  %>
+                 <div class="tcard">
+                     <div class="tcontainer">
+                        <h4><b><%= subject.name %></b></h4>
+                         <hr/>
+                         <%totalAssess.forEach(function(totalAssess){%>
+                         <%if(totalAssess.classID == subject.classID){%>
+                         <p >Total Tests:<%=totalAssess.id%> </p>
+                         <%}})%>
+                         <%announcedRes.forEach(function (announcedRes) { %>
+                        <%if (announcedRes.classID == subject.classID){%>
+                         <p>Results announced:<%= announcedRes.total%></p>
+                         <%}})%>
+                         <%pendingResult.forEach(function (pendingResult) { %>
+                         <%if(pendingResult.classID == subject.classID){%>
+                         <p>Pending assessments:<%= pendingResult.pending%></p>
+                         <%}})%>
+                    </div>
+                 </div>
+        <%})}%>
+        <div  class="resultGraph">
+            <p class="subHeadings" style="font-size: 30px;">Result Statistics</p>
+            <table id="resTabel" >
+                <tr>
+                    <th>Subject</th>
+                    <th>Pass %</th>
+                    <th>Fail %</th>
+                </tr>
+                 <%subject.forEach(function (subject) {  %>
+                <tr>
+                    <td><%=subject.name%></td>
+                    <td>
+                        <%pass.forEach(function (pass) {  %>
+                        <%if(pass.classID == subject.classID){%>
+                        <p><%=(pass.passed/50)*100%></p>
+                        <%}})%>
+                    </td>
+                    <td>
+                        <%fail.forEach(function (fail) {  %>
+                        <%if(fail.classID == subject.classID){%>
+                        <p><%=(fail.failed/50)*100%></p>
+                        <%}})%>
+                    </td>
+                </tr>
+                <%})%>
+            </table>
         </div>
-      <%})%>
-
     </div>
 </div>
-
-
 
 <!-- jQuery -->
 <script src="js/jquery.min.js"></script>
