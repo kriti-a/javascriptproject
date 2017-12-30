@@ -1,0 +1,58 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/morris.css" rel="stylesheet">
+    <link href="../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/metisMenu.min.js"></script>
+    <script src="../js/raphael.min.js"></script>
+    <script src="../js/morris.min.js"></script>
+    <title>Results</title>
+
+</head>
+
+<body>
+
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-11">
+                    <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
+                        <thead style="background-color: black;color: white;border-color:#0000" class="thead-dark">
+                        <tr>
+                            <th style="border:none;padding: 15px;">Assessment</th>
+                            <th style="border:none;padding: 15px;">Total Marks</th>
+                            <th style="border:none;padding: 15px;">Passing Marks</th>
+                            <th style="border:none;padding: 15px;">Deadline</th>
+                            <th style="border:none;padding: 15px;" ></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% result.forEach((result) => { %>
+                        <tr style="border-color: transparent">
+                            <td style="border:none;padding: 15px;"><%= result.Name %></td>
+                            <td style="border:none;padding: 15px;"><%= result.Total %></td>
+                            <td style="border:none;padding: 15px;"><%= result.Passing %></td>
+                            <td style="border:none;padding: 15px;"><%= result.Deadline%></td>
+                            <td><a href="givetest/<%= result.id %>">Give Test</a></td>
+                        </tr>
+                        <% }) %>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
