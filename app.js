@@ -24,7 +24,7 @@ var users = require('./routes/users');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-app.use(bodyParser());
+//app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -40,8 +40,6 @@ app.set('view engine', 'ejs');
 //routing the static files. css/js
 app.use(express.static(__dirname + '/public'));
 
-server.listen(process.env.PORT || 3000);
-console.log("Server is running ... ");
 
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
@@ -86,7 +84,7 @@ var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
 var teacher_dashboard = require('./routes/teacher_dashboard.js');
 var chats = require('./routes/chatroom');
-
+var students = require('./routes/student.js');
 
 // if there are any pages that start after localhost:8080/ then route them to index
 // this includes the main page and/or about page, contact us page etc ...
@@ -101,11 +99,14 @@ app.use('/teacher_d',teacher_dashboard);
 // -----For the Chat
 app.use('/chat', chats);
 
+// ------- Student -----
 
+
+app.use('/student/', students);
 
 //-----------------------------------------------------------------------------------
 
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -121,7 +122,9 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.render('error');
-});
+});*/
 
 // ---- Do not remove this commented code -- Momal
-//module.exports = app;
+module.exports = app;
+
+

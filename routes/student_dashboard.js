@@ -1,6 +1,6 @@
 var express    = require('express'),
     mysql      = require('mysql'),
-    bodyParser = require('body-parser'),
+    bodyParser = require('body-parser')
     moment = require('moment');
 /*exports.index = function(req, res) {
     res.render('index', { moment: moment });
