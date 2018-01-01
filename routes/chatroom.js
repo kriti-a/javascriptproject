@@ -6,6 +6,7 @@ var sqlgetids = "SELECT count(*) as c FROM assess_easy.user_class where userid =
 var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
+    password : 'root',
     database : 'ASSESS_EASY'
 });
 

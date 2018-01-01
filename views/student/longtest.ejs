@@ -12,27 +12,13 @@
     <script src="../../js/raphael.min.js"></script>
     <script src="../../js/morris.min.js"></script>
     <title>Results</title>
-
     <script>
-        var limitWord = 800;
-        myFunction(id)
-        {
-            $this = id;
-            alert("here");
-            /* var regex = /\s+/gi;
-             var wordcount = jQuery.trim($this.val()).replace(regex, ' ').split(' ').length;
-             if (wordcount <= limitWord) {
-                 chars = $this.val().length;
-             } else {
-                 var text = $(this).val();
-                 var new_text = text.substr(0, chars);
-                 $(this).val(new_text);
-                 wordcount --;
-             }
-             $("#count"+id).html(wordcount);*/
+
+        function goback() {
+            window.location.href = "../assessments";
         }
     </script>
-</head>
+    </head>
 
 <body>
 
@@ -45,28 +31,32 @@
         <div class="container">
             <div class="row">
                 <div class="col col-lg-11">
-                    <h3> assignment</h3>
-                    <form action="/">
-                        <div class="form-row">
+                    <h3><%= assname %></h3>
+                    <div class="form-row">
+                        <form action="../addanswer" method="post">
+
                     <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
                         <tbody>
+
                         <% result.forEach((result) => { %>
                         <tr style="border-color: transparent">
                             <td style="border:none;padding: 15px;">
                                 <div class="form-group">
+                                   <input value="<%= result.QuestionID%>" name="questionid[]" class="form-control" type="hidden" />
                                     <label for="<%= result.QuestionID%>"><%= result.Text %></label>
                                     <textarea id="<%= result.QuestionID%>" name="answer[]" class="form-control" rows="5"></textarea>
-
+                                    <small class="form-text text-muted">Total Marks: <%= result.Marks %></small>
                                 </div>
                             </td>
                         </tr>
-                        <% }) %>
+                        <% })%>
                         </tbody>
                     </table>
                         <button type="submit" class="btn btn-success" >Submit</button>
-                        <button type="button" class="btn btn-danger" >Cancel</button>
-                        </div>
+                            <button type="button" onclick="goback()" class="btn btn-danger" >Cancel</button>
+
                     </form>
+                    </div>
                 </div>
             </div>
         </div>

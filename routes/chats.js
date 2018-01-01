@@ -15,12 +15,14 @@ module.exports = function (io) {
     var connection = mysql.createConnection({
         host     : 'localhost',
         user     : 'root',
+        password : 'root',
         database : 'ASSESS_EASY'
     });
 
 
     connection.query(sqlgetemail, function(err, rows, fields)
     {
+
         if (err) throw err;
         else
         {
