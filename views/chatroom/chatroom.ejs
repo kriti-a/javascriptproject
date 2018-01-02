@@ -13,7 +13,7 @@
 
     <style>
         body{margin-top: 30px}
-        #messageArea{display: none}
+        #messageArea{display: block}
     </style>
 
 
@@ -21,9 +21,16 @@
 <body>
 <div class="container">
     <% include chats.ejs%>
+        <a ></a>
+        <input type="hidden" value="<%= id%>" id="inn">
+
+
+
 </div>
 <script>
+
     $(function () {
+
         var socket = io.connect();
         var $messageForm = $('#messageForm');
         var $message = $('#message');
@@ -33,10 +40,21 @@
         var $messageArea = $('#messageArea');
         var $users = $('#users');
         var $username = $('#username');
+        var groupid = document.getElementById('inn').value.toString();
+
+        socket.on('updatechat', function (data) {
+            $chat.append('<div class="well">'+data.msg+'</div>');
+        });
+
+        socket.on('connect', function(){
+            // call the server-side function 'adduser' and send one parameter (value of prompt)
+            socket.emit('send groupid', groupid);
+        });
+
 
         $messageForm.submit(function (e) {
             e.preventDefault();
-            socket.emit('send message', $message.val());
+            socket.emit('send message', [$message.val(), groupid]);
             $message.val('');
         });
 
@@ -49,7 +67,7 @@
             e.preventDefault();
             socket.emit('new user', $username.val(),function (data) {
                 if(data){
-                    $userFormArea.hide();
+                 //   $userFormArea.hide();
                     $messageArea.show();
                 }
             });
@@ -65,6 +83,9 @@
             $users.html(html);
         });
 
+        /*socket.on('damn', function (data) {
+            alert(data);
+        });*/
     });
 </script>
 </body>

@@ -1,0 +1,67 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+    <title>Results</title>
+    <script>
+
+        function goback() {
+            window.location.href = "../assessments";
+        }
+    </script>
+</head>
+
+<body>
+
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-11">
+                    <h3><%= assname %></h3>
+                    <div class="form-row">
+                        <div class="form-check">
+                            <form action="../addtf" method="post">
+                                <div class="form-group">
+                                    <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
+                                        <tbody>
+
+                                        <% result.forEach((result) => { %>
+                                        <tr style="border-color: transparent">
+                                            <td style="border:none;padding: 15px;">
+                                                <input value="<%= result.QuestionID%>" name="questionid[]" class="form-control" type="hidden" />
+                                                <label class="form-check-input" class="form" for="<%= result.QuestionID%>"><%= result.Text %></label><br>
+                                                <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="True"> True<br>
+                                                <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="False"> False<br>
+                                               <small class="form-text text-muted">Total Marks: <%= result.Marks %></small>
+                                            </td>
+
+                                        </tr>
+                                        <% })%>
+                                        </tbody>
+                                    </table>
+                                    <button type="submit" class="btn btn-success" >Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

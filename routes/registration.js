@@ -100,12 +100,14 @@ router.post('/registration', function(req, res) {
 
         const errors = req.validationErrors();
         if (errors){
-            console.log('errors: ${JSON.stringify(errors)}');
+            console.log('errors:' + JSON.stringify(errors));
             res.render('registration', {
                 title: 'Registration Error',
                 //erro1: 'Firstname field cannot be empty.',
                 errors: errors
+
             });
+          //  console.log(errors.toString());
         }
         else{
             const firstName = req.body.firstName;

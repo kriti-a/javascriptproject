@@ -1,6 +1,6 @@
 var express    = require('express'),
     mysql      = require('mysql'),
-    bodyParser = require('body-parser'),
+    bodyParser = require('body-parser')
     moment = require('moment');
 
 var router = express.Router();

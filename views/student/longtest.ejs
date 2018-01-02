@@ -1,0 +1,66 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+    <title>Results</title>
+    <script>
+
+        function goback() {
+            window.location.href = "../assessments";
+        }
+    </script>
+    </head>
+
+<body>
+
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-11">
+                    <h3><%= assname %></h3>
+                    <div class="form-row">
+                        <form action="../addanswer" method="post">
+
+                    <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
+                        <tbody>
+
+                        <% result.forEach((result) => { %>
+                        <tr style="border-color: transparent">
+                            <td style="border:none;padding: 15px;">
+                                <div class="form-group">
+                                   <input value="<%= result.QuestionID%>" name="questionid[]" class="form-control" type="hidden" />
+                                    <label for="<%= result.QuestionID%>"><%= result.Text %></label>
+                                    <textarea id="<%= result.QuestionID%>" name="answer[]" class="form-control" rows="5"></textarea>
+                                    <small class="form-text text-muted">Total Marks: <%= result.Marks %></small>
+                                </div>
+                            </td>
+                        </tr>
+                        <% })%>
+                        </tbody>
+                    </table>
+                        <button type="submit" class="btn btn-success" >Submit</button>
+                            <button type="button" onclick="goback()" class="btn btn-danger" >Cancel</button>
+
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
