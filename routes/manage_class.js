@@ -35,15 +35,6 @@ connection.query('select * from classes ;',
         });
 });
 
-router.post('/removeClass', function(req, res) {
-    const id = req.body.classId;
-    connection.query('DELETE FROM classes WHERE classId ='+id,
-        function (err, result) {
-            if (err) throw err;
-            res.redirect('/manage_class');
-        });
-});
-
 router.post('/joinClass', function(req, res) {
     const id = req.body.classId;
     var query =  "Insert into user_class (userID, classID) values(1,'"+id+"')";

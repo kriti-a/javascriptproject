@@ -128,5 +128,5 @@ app.use(function(err, req, res, next) {
 
 // ---- Do not remove this commented code -- Momal
 module.exports = app;
-
+console.log("server started");
 

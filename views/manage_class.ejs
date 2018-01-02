@@ -23,7 +23,6 @@
                             <tr>
                                 <th>Classes</th>
                                 <th>Join Class</th>
-                                <th>Delete Class</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -34,12 +33,6 @@
                                     <form  action="/joinClass" method="post">
                                         <input type="hidden" value="<%= classes[i].classID %>" name="classId">
                                         <button type="submit"  class="btn btn-success" id="<%= classes[i].classID %>">Join</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form  action="/removeClass" method="post">
-                                        <input type="hidden" value="<%= classes[i].classID %>" name="classId">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
                                 </td>
                             </tr>
