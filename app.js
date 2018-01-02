@@ -81,6 +81,8 @@ app.set('views', path.join(__dirname, 'views'));
 //routing to student dashboard added
 var studentDashboard = require('./routes/student_dashboard.js');
 app.use('/',studentDashboard);
+var manageClass = require('./routes/manage_class.js');
+app.use('/',manageClass);
 // setting the routes (sub js pages)
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
