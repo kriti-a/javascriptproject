@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
     database : 'ASSESS_EASY'
 });
 
-var userid = 1;
+var userid = 4;
 var assessmentid="";
 var sqlgetresults = "Select a.name as 'Name',a.totalMarks as Total,a.passingMarks as Passing,ar.obtainedMarks as Obtained, CASE when a.passingMarks > ar.obtainedMarks then 'Failed'\n" +
     "else 'Passed'\n" +
@@ -156,7 +156,7 @@ router.get('/givetest/:id', function (req, res) {
                                   });
                               }
                               //    console.log(newresult);
-                              newresult = shuffle(newresult);
+                             // newresult = shuffle(newresult);
                               res.render('student/mcqtest', {result: newresult, assname: assname})
                           });
 
@@ -165,7 +165,7 @@ router.get('/givetest/:id', function (req, res) {
                           connection.query(sqlgettfquestions, [req.params.id], function (err, result) {
                               if (err) throw err;
                               var assname = result[0].Name;
-                              result = shuffle(result);
+                           //   result = shuffle(result);
                               res.render('student/tftest', {result: result, assname: assname})
                           });
                       }
