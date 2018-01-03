@@ -127,6 +127,8 @@ app.use(function(err, req, res, next) {
 });*/
 
 // ---- Do not remove this commented code -- Momal
-module.exports = app;
-console.log("server started");
 
+server.listen(process.env.PORT || 3000);
+console.log("Server is running ... ");
+
+module.exports = app;
