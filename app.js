@@ -79,6 +79,8 @@ app.set('views', path.join(__dirname, 'views'));
 //routing to student dashboard added
 var studentDashboard = require('./routes/student_dashboard.js');
 app.use('/',studentDashboard);
+var manageClass = require('./routes/manage_class.js');
+app.use('/',manageClass);
 // setting the routes (sub js pages)
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
@@ -125,6 +127,8 @@ app.use(function(err, req, res, next) {
 });*/
 
 // ---- Do not remove this commented code -- Momal
+
+server.listen(process.env.PORT || 3000);
+console.log("Server is running ... ");
+
 module.exports = app;
-
-

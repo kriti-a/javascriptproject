@@ -2,15 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f56f52b-5033-46b7-904e-a87eae793adb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/views/teacher/viewTests.ejs" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/manage_class.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/manage_class.ejs" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml.old" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/student.js" afterPath="$PROJECT_DIR$/routes/student.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/teachers.js" afterPath="$PROJECT_DIR$/routes/teachers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/registration.js" afterPath="$PROJECT_DIR$/routes/registration.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/student_dashboard.js" afterPath="$PROJECT_DIR$/routes/student_dashboard.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/header.ejs" afterPath="$PROJECT_DIR$/views/header.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/home.ejs" afterPath="$PROJECT_DIR$/views/home.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/registration.ejs" afterPath="$PROJECT_DIR$/views/registration.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/side_menu.ejs" afterPath="$PROJECT_DIR$/views/side_menu.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/student_dashboard.ejs" afterPath="$PROJECT_DIR$/views/student_dashboard.ejs" />
     </list>
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,55 +25,8 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="EJS" />
-      </list>
-    </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>bodyParser</find>
-      <find>assess_easy.assessment_results</find>
-      <find>classassesmentInfo</find>
-      <find>page-wrapper</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/public/js/student_dashboard.js" />
-        <option value="$PROJECT_DIR$/routes/index.js" />
-        <option value="$PROJECT_DIR$/views/error.ejs" />
-        <option value="$PROJECT_DIR$/views/side_menu.ejs" />
-        <option value="$PROJECT_DIR$/public/css/sb-admin-2.css" />
-        <option value="$PROJECT_DIR$/views/teacher_dashboard.ejs" />
-        <option value="$PROJECT_DIR$/public/css/style.css" />
-        <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/routes/teacher_dashboard.js" />
-        <option value="$PROJECT_DIR$/routes/registration.js" />
-        <option value="$PROJECT_DIR$/routes/chats.js" />
-        <option value="$PROJECT_DIR$/routes/chatroom.js" />
-        <option value="$PROJECT_DIR$/routes/student_dashboard.js" />
-        <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/views/student/alreadysubmitted.ejs" />
-        <option value="$PROJECT_DIR$/views/student/submittest.ejs" />
-        <option value="$PROJECT_DIR$/views/student/mcqtest.ejs" />
-        <option value="$PROJECT_DIR$/views/student/deadlinepassed.ejs" />
-        <option value="$PROJECT_DIR$/views/student/tftest.ejs" />
-        <option value="$PROJECT_DIR$/views/teacher/viewassignments.ejs" />
-        <option value="$PROJECT_DIR$/views/student/alltests.ejs" />
-        <option value="$PROJECT_DIR$/routes/student.js" />
-        <option value="$PROJECT_DIR$/views/teacher/alltests.ejs" />
-        <option value="$PROJECT_DIR$/views/teacher/studentsubmission.ejs" />
-        <option value="$PROJECT_DIR$/routes/teachers.js" />
-        <option value="$PROJECT_DIR$/views/teacher/viewsubmissions.ejs" />
-      </list>
-    </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -76,17 +34,8 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="NodeModulesDirectoryManager">
-    <handled-path value="$PROJECT_DIR$/node_modules" />
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
-  </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -100,7 +49,22 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="javascriptproject" type="cbb8eebc:String" user="javascriptproject" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="javascriptproject" type="cbb8eebc:String" user="javascriptproject" />
+              <item name=".idea" type="cbb8eebc:String" user=".idea" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -112,28 +76,6 @@
               <item name="javascriptproject" type="b2602c69:ProjectViewProjectNode" />
               <item name="javascriptproject" type="462c0819:PsiDirectoryNode" />
               <item name="bin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="javascriptproject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="javascriptproject" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="javascriptproject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="javascriptproject" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="javascriptproject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="javascriptproject" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="student" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="javascriptproject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="javascriptproject" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="teacher" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -217,12 +159,12 @@
       <workItem from="1514491774823" duration="167000" />
       <workItem from="1514550216777" duration="3310000" />
       <workItem from="1514664528143" duration="2199000" />
-      <workItem from="1514673333067" duration="83619000" />
+      <workItem from="1514673333067" duration="84073000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="150481000" />
+    <option name="totallyTimeSpent" value="150935000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -264,13 +206,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -633,6 +568,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="339">
           <caret line="184" column="30" lean-forward="true" selection-start-line="184" selection-start-column="30" selection-end-line="184" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

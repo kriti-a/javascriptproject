@@ -7,74 +7,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#javascript:">Assess Easy</a>
+        <a class="navbar-brand" href="#">Assess Easy</a>
     </div>
     <!-- /.navbar-header -->
 
     <ul class="nav navbar-top-links navbar-right">
-
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-alerts">
-                <li>
-                    <a href="#">
-                        <div>
-                            <i class="fa fa-comment fa-fw"></i> New Comment
-                            <span class="pull-right text-muted small">4 minutes ago</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="#">
-                        <div>
-                            <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                            <span class="pull-right text-muted small">12 minutes ago</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="#">
-                        <div>
-                            <i class="fa fa-envelope fa-fw"></i> Message Sent
-                            <span class="pull-right text-muted small">4 minutes ago</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="#">
-                        <div>
-                            <i class="fa fa-tasks fa-fw"></i> New Task
-                            <span class="pull-right text-muted small">4 minutes ago</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="#">
-                        <div>
-                            <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                            <span class="pull-right text-muted small">4 minutes ago</span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-            <!-- /.dropdown-alerts -->
-        </li>
         <!-- /.dropdown -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                </li>
-                <li class="divider"></li>
-                <li><a href="#javascript:"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                 </li>
             </ul>
             <!-- /.dropdown-user -->
@@ -89,7 +33,7 @@
                 <li>
                     <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
-                <li class="dropdown">
+                <li class="dropdown hide" id="teacher-class-section">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i> Class<span class="fa arrow"></span></a>
                     <ul class="dropdown-menu"  role="menu">
                         <li>
@@ -105,6 +49,20 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
+                <!-- student claases -->
+                <li class="dropdown" id = "student-class-section">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i> Class<span class="fa arrow"></span></a>
+                    <ul class="dropdown-menu"  role="menu">
+                        <li>
+                            <a href="/manage_class">Manage Classes</a>
+                            <!-- <a href="teacher/viewClasses.ejs">View All</a>-->
+                        </li>
+
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+
+
                 <li>
                     <a href=""><i class="fa fa-edit fa-fw"></i> Take Test</a>
                 </li>
@@ -120,3 +78,17 @@
     </div>
     <!-- /.navbar-static-side -->
 </nav>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript">
+    var jq=$.noConflict();
+     jq(document).ready(function() {
+        if (window.location.href.indexOf("student_dashboard") > 0) {
+        }
+        else{
+            jq("#student-class-section").addClass("hide");
+            jq("#teacher-class-section").removeClass("hide");
+        }
+    });
+
+</script>

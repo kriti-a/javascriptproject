@@ -1,0 +1,60 @@
+<% include header.ejs %>
+<title>Manage Class</title>
+<div id="wrapper">
+
+    <% include side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Manage Class</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Classes</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <thead>
+                            <tr>
+                                <th>Classes</th>
+                                <th>Join Class</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% for(var i=0; i<classes.length; i++) {%>
+                            <tr class="odd gradeX">
+                                <td><%= classes[i].name %></td>
+                                <td>
+                                    <form  action="/joinClass" method="post">
+                                        <input type="hidden" value="<%= classes[i].classID %>" name="classId">
+                                        <button type="submit"  class="btn btn-success" id="<%= classes[i].classID %>">Join</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+                        <!-- /.table-responsive -->
+
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var dataSet = <%= studentsInfo %>;
+        for(var i=0; i<dataSet.length; i++) {
+        console.info($("#"+dataSet[i]));
+        $("#"+dataSet[i]).attr("disabled", "disabled");
+         }
+    });
+</script>

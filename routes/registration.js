@@ -47,7 +47,7 @@ router.get('/stu_teach_dashboard', authenticationMiddleware(), function(req, res
 router.post('/login',
     passport.authenticate('local',{
         failureRedirect:'/login',
-        successRedirect: '/stu_teach_dashboard'
+        successRedirect: '/student_dashboard'
          }));
 
 router.get('/logout', function(req, res) {
@@ -128,7 +128,7 @@ router.post('/registration', function(req, res) {
                         const user_id =results[0];
                         console.log(results[0]);
                         req.login(user_id, function(err) {
-                            res.redirect('/stu_teach_dashboard');
+                            res.redirect('/student_dashboard');
                         });
 
 
