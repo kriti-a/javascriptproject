@@ -50,6 +50,7 @@ router.post('/login',
         successRedirect: '/student_dashboard'
          }));
 
+
 router.get('/logout', function(req, res) {
     req.logout();
     req.session.destroy();
