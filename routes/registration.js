@@ -45,11 +45,25 @@ router.get('/stu_teach_dashboard', authenticationMiddleware(), function(req, res
 
 
 router.post('/login',
-    passport.authenticate('local',{
+    /*passport.authenticate('local',{
         failureRedirect:'/login',
         successRedirect: '/student_dashboard'
-         }));
-
+         })*/
+    passport.authenticate('local'), function(req, res) {
+        connection.query('select * from users inner join user_access on user_access.userID = users.userID inner join access_level on access_level.accessID = user_access.accessID where users.userID=' +res.req.user.user_id,
+            function (err, userAcessInfo) {
+                if (err) throw err;
+                console.log(userAcessInfo);
+                for (var i in userAcessInfo) {
+                    var acessType = userAcessInfo[i].accessType;
+                }
+                if(acessType === '1'){
+                    res.redirect('/teacher_d');
+                } else {
+                    res.redirect('/student_dashboard');
+                }
+                });
+    });
 
 router.get('/logout', function(req, res) {
     req.logout();
