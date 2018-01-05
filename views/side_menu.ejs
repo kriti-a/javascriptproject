@@ -26,69 +26,53 @@
         <!-- /.dropdown -->
     </ul>
     <!-- /.navbar-top-links -->
-
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
-            <ul class="nav" id="side-menu">
+            <!-- teacher dashboard -->
+            <% if(accessType == 1) { %>
+            <ul class="nav" id="side-menu" id="teachersNav">
                 <li>
-                    <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <a href=""><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
                 </li>
-                <li class="dropdown hide" id="teacher-class-section">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i> Class<span class="fa arrow"></span></a>
-                    <ul class="dropdown-menu"  role="menu">
-                        <li>
-                           <a href="javascript:;" onclick="viewClasses()">View All</a>
-                            <!-- <a href="teacher/viewClasses.ejs">View All</a>-->
-                        </li>
-                        <li>
-                            <a href="javascript:;" onclick="addNewClass()">Create New</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" onclick="">Edit Existing</a>
-                        </li>
-                    </ul>
-                    <!-- /.nav-second-level -->
+                <li id="teacher-class-section">
+                    <a href="javascript:;"><i class="fa fa-table fa-fw"></i>Add Class</a>
                 </li>
-                <!-- student claases -->
-                <li class="dropdown" id = "student-class-section">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i> Class<span class="fa arrow"></span></a>
-                    <ul class="dropdown-menu"  role="menu">
-                        <li>
-                            <a href="/manage_class">Manage Classes</a>
-                            <!-- <a href="teacher/viewClasses.ejs">View All</a>-->
-                        </li>
-
-                    </ul>
-                    <!-- /.nav-second-level -->
+                <li>
+                    <a href=""><i class="fa fa-edit fa-fw"></i>Create Test</a>
                 </li>
 
-
                 <li>
-                    <a href=""><i class="fa fa-edit fa-fw"></i> Take Test</a>
-                </li>
-                <li>
-                    <a href="student/results"><i class="fa fa-bar-chart-o fa-fw"></i> Results</a>
-                </li>
-                <li>
-                    <a href="chat/1"><i class="fa fa-bar-chart-o fa-fw"></i> Chat</a>
+                    <a href="chat/1"><i class="fa  fa-comments fa-fw"></i>Chat</a>
                 </li>
             </ul>
+        <% } else { %>
+            <!-- student dashboard -->
+            <ul class="nav" id="side-menu" id="studentsNav">
+                <li>
+                    <a href="/student_dashboard"><i class="fa fa-dashboard fa-fw"></i>Student's Dashboard</a>
+                </li>
+                <li id = "student-class-section">
+                    <a href="/manage_class"><i class="fa fa-table fa-fw"></i>Manage Class</a>
+                </li>
+                <li>
+                    <a href=""><i class="fa fa-edit fa-fw"></i>Take Test</a>
+                </li>
+                <li>
+                    <a href="student/results"><i class="fa fa-bar-chart-o fa-fw"></i>Results</a>
+                </li>
+                <li>
+                    <a href="chat/1"><i class="fa  fa-comments fa-fw"></i>Chat</a>
+                </li>
+            </ul>
+            <% }  %>
         </div>
         <!-- /.sidebar-collapse -->
     </div>
     <!-- /.navbar-static-side -->
 </nav>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript">
-    var jq=$.noConflict();
-     jq(document).ready(function() {
-        if (window.location.href.indexOf("student_dashboard") > 0) {
-        }
-        else{
-            jq("#student-class-section").addClass("hide");
-            jq("#teacher-class-section").removeClass("hide");
-        }
-    });
+<script>
+    $(document).ready(function () {
 
+    });
 </script>

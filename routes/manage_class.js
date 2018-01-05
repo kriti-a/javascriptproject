@@ -29,8 +29,9 @@ connection.query('select * from classes ;',
                     }
                 }
                 var studentdata = JSON.stringify(temp);
+                var accessType = res.req.user.accessType;
                 if (err) throw err;
-                res.render('manage_class', {classes: result, studentsInfo:studentdata});
+                res.render('manage_class', {classes: result, studentsInfo:studentdata,accessType : accessType});
             });
         });
 });
