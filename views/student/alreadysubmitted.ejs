@@ -1,0 +1,50 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+    <title>Results</title>
+
+    <script>
+        function takehome() {
+            window.location.href = "/student_dashboard";
+        }
+        function gotests() {
+            window.location.href = "../assessments";
+        }
+    </script>
+    
+</head>
+
+<body>
+
+
+<div id="wrapper">
+
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div style="margin-top: 20px" class="col col-lg-11">
+
+                    <div class="alert alert-danger" role="alert">
+                        You have already submitted this assignment. It cannot be submitted again and neither can you make any changes.
+                    </div>
+                        <button type="button" class="btn btn-success" onclick="gotests()">Back</button>
+                        <button type="button" class="btn btn-danger" onclick="takehome()" >Go Home</button> </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

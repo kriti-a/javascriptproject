@@ -1,0 +1,78 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/metisMenu.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <title>Results</title>
+
+</head>
+
+<body>
+
+
+<div id="wrapper">
+    <% try
+    {
+        var myvar = message.toString();
+        if (myvar.toString()=='success'){%><script>swal("Test Submitted Successfully","Good Luck!", "success");</script><%}
+        else{%><script> swal("There was some error.","Please try again!", "error");</script><%}
+    }
+    catch(err)
+    {}
+    %>
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div style="margin-top: 20px" class="col col-lg-11">
+                    <h4>Submitted ... </h4>
+                    <table style="margin-top: 20px;border:none;border-color:#0000;border-radius: 5px" class="table table-dark">
+                        <thead style="background-color: #222d5a;color: white;border-color:#0000;border-radius: 5px" class="thead-dark">
+                        <tr>
+                            <th style="border:none;padding: 5px;">Student Name</th>
+                            <th style="border:none;padding: 5px;">Obtained Marks</th>
+                            <th style="border:none;padding: 5px;" ></th>
+                            <th style="border:none;padding: 5px;" ></th>
+                            <th style="border:none;padding: 5px;" ></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% result.forEach((result) => { %>
+                        <tr style="border-color: transparent">
+                            <td style="border:none;padding: 5px;"><%= result.uName %></td>
+                            <td style="border:none;padding: 5px;"><%= result.Obtained %></td>
+                            <td style="border:none;padding: 5px;text-align: center"><% if(result.results.toString() == 'Added'){ %>
+                            <span style="background-color: #3c763d" class="badge badge-success"><%= result.results %></span>
+                            <% } else{ %>
+                            <span style="background-color: #a94442" class="badge badge-danger"><%= result.results %></span>
+                            <% } %> </td>
+                            <td style="border:none;padding: 5px;"></td>
+                            <td style="border:none;padding: 5px;text-align: center"><% if(result.results.toString() == 'Added'){ %>
+
+                                    <a  style="color: darkslategray" onclick="return false;" >View Submissions</a>
+                                <% } else{ %>
+
+                                    <a href="../studentanswers/<%= result.userID %>/<%= result.assessmentID %>">View Submissions</a>
+                                <% } %> </td>
+
+                        </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

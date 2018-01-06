@@ -1,5 +1,5 @@
 <% include header.ejs %>
-
+<title>Student Dashboard</title>
 <div id="wrapper">
 
     <% include side_menu.ejs %>
@@ -36,7 +36,7 @@
 
                         <div class="list-group">
                             <% for(var i=0; i<notificationInfo.length; i++) {%>
-                            <a href="#" class="list-group-item">
+                            <a href="#" class="list-group-item" style="cursor:default;">
                                 <i class="fa fa-comment fa-fw"></i><%= notificationInfo[i].message %>
                                 <span class="pull-right text-muted small"><em><%= moment(notificationInfo[i].createdon).format('Do MMMM, YYYY'); %></em>
                                 </span>

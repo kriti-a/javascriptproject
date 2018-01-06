@@ -1,0 +1,141 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/morris.css" rel="stylesheet">
+    <link href="../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/metisMenu.min.js"></script>
+    <script src="../js/raphael.min.js"></script>
+    <script src="../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <title>Results</title>
+
+</head>
+
+<body>
+
+
+<div id="wrapper">
+    <% try
+    {  var myvar = message.toString();
+    if (myvar.toString()=='success'){%><script>swal("Test Submitted Successfully","Good Luck!", "success");</script><%}
+    else{%><script> swal("There was some error.","Please try again!", "error");</script><%}
+    }
+    catch(err)
+    {
+
+    }
+    %>
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div style="margin-top: 20px" class="col col-lg-11">
+                    <h4>Long Answer Assessments</h4>
+                    <table style="margin-top: 20px;border:none;border-color:#0000;border-radius: 5px" class="table table-dark">
+                        <thead style="background-color: #222d5a;color: white;border-color:#0000;border-radius: 5px" class="thead-dark">
+                        <tr>
+                            <th style="border:none;padding: 5px;">Assessment</th>
+                            <th style="border:none;padding: 5px;">Total Marks</th>
+                            <th style="border:none;padding: 5px;">Passing Marks</th>
+                            <th style="border:none;padding: 5px;">Deadline</th>
+                            <th style="border:none;padding: 5px;" ></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% resultL.forEach((resultL) => { %>
+                        <tr style="border-color: transparent">
+                            <td style="border:none;padding: 5px;"><%= resultL.Name %></td>
+                            <td style="border:none;padding: 5px;"><%= resultL.Total %></td>
+                            <td style="border:none;padding: 5px;"><%= resultL.Passing %></td>
+                            <td style="border:none;padding: 5px;"><%= resultL.Deadline%>
+                                <% if(resultL.Due.toString() == 'Open'){ %>
+                                <span style="background-color: #3c763d" class="badge badge-success"><%= resultL.Due %></span>
+                                <% } else{ %>
+                                <span style="background-color: #a94442" class="badge badge-danger"><%= resultL.Due %></span>
+                                <% } %> </td>
+                            <td style="border:none;padding: 15px;"><a href="allsubmissions/<%= resultL.assessmentID %>">Submissions</a></td>
+
+                        </tr>
+                        <% }) %>
+
+                        </tbody>
+                    </table>
+
+
+                    <h4>MCQ Assessments</h4>
+                    <table style="margin-top: 20px;border:none;border-color:#0000;border-radius: 5px" class="table table-dark">
+                        <thead style="background-color: #222d5a;color: white;border-color:#0000;border-radius: 5px" class="thead-dark">
+                        <tr>
+                            <th style="border:none;padding: 5px;">Assessment</th>
+                            <th style="border:none;padding: 5px;">Total Marks</th>
+                            <th style="border:none;padding: 5px;">Passing Marks</th>
+                            <th style="border:none;padding: 5px;">Deadline</th>
+                            <th style="border:none;padding: 5px;" ></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% resultM.forEach((resultM) => { %>
+                        <tr style="border-color: transparent">
+                            <td style="border:none;padding: 5px;"><%= resultM.Name %></td>
+                            <td style="border:none;padding: 5px;"><%= resultM.Total %></td>
+                            <td style="border:none;padding: 5px;"><%= resultM.Passing %></td>
+                            <td style="border:none;padding: 5px;"><%= resultM.Deadline%>
+                                <% if(resultM.Due.toString() == 'Open'){ %>
+                                <span style="background-color: #3c763d" class="badge badge-success"><%= resultM.Due %></span>
+                                <% } else{ %>
+                                <span style="background-color: #a94442" class="badge badge-danger"><%= resultM.Due %></span>
+                                <% } %> </td>
+                            <td style="border:none;padding: 15px;"><a href="submitMCQ/<%= resultM.assessmentID %>">Post Results</a></td>
+
+                        </tr>
+                        <% }) %>
+
+                        </tbody>
+                    </table>
+
+
+                    <h4>True/False Assessments</h4>
+                    <table style="margin-top: 20px;border:none;border-color:#0000;border-radius: 5px" class="table table-dark">
+                        <thead style="background-color: #222d5a;color: white;border-color:#0000;border-radius: 5px" class="thead-dark">
+                        <tr>
+                            <th style="border:none;padding: 5px;">Assessment</th>
+                            <th style="border:none;padding: 5px;">Total Marks</th>
+                            <th style="border:none;padding: 5px;">Passing Marks</th>
+                            <th style="border:none;padding: 5px;">Deadline</th>
+                            <th style="border:none;padding: 5px;" ></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% resultTF.forEach((resultTF) => { %>
+                        <tr style="border-color: transparent">
+                            <td style="border:none;padding: 5px;"><%= resultTF.Name %></td>
+                            <td style="border:none;padding: 5px;"><%= resultTF.Total %></td>
+                            <td style="border:none;padding: 5px;"><%= resultTF.Passing %></td>
+                            <td style="border:none;padding: 5px;"><%= resultTF.Deadline%>
+                                <% if(resultTF.Due.toString() == 'Open'){ %>
+                                <span style="background-color: #3c763d" class="badge badge-success"><%= resultTF.Due %></span>
+                                <% } else{ %>
+                                <span style="background-color: #a94442" class="badge badge-danger"><%= resultTF.Due %></span>
+                                <% } %> </td>
+                            <td style="border:none;padding: 15px;"><a href="submitTF/<%= resultTF.assessmentID %>">Post Results</a></td>
+
+                        </tr>
+                        <% }) %>
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
