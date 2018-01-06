@@ -39,13 +39,15 @@
                 $.ajax({
                     type: "GET",
                     contentType: "application/json; charset=utf-8",
-                    url: "/teacher/getClassesName",
+                    url: "/teacher/getLongQuestions/"+<%= id %>,
                     dataType: "json"
                 }).done(function (response) {
                     response = $.grep(response, function (item) {
-                        return (!filter.classID || item.classID.indexOf(filter.classID) > -1)
-                               && (!filter.name || item.name.indexOf(filter.name) > -1)
+                        return (!filter.lqID || item.tfqID.indexOf(filter.tfqID) > -1)
+                            && (!filter.lqText || item.tfText.indexOf(filter.tfText) > -1)
+                            && (!filter.marks || item.marks.indexOf(filter.marks) > -1)
                     });
+                    //response.push({"token" : "\"" + localStorage.getItem("token") + "\"" });
                     data.resolve(response);
                     console.log(response);
                 });
@@ -55,8 +57,8 @@
 
                 return $.ajax({
                     type: "POST",
-                    url: "/teacher/addClass",
-                    data: item
+                    url: "/teacher/addLongQuestion/"+<%= id %>,
+                    data: item,
                 }).done(function () {
                     $("#jsGrid_users").jsGrid("loadData");
                 });
@@ -65,17 +67,17 @@
 
                 return $.ajax({
                     type: "POST",
-                    url: "/teacher/updateClass",
+                    url: "/teacher/updateLongQuestion",
                     data: item
                 }).done(function () {
                     $("#jsGrid_users").jsGrid("loadData");
                 });
             },
             deleteItem: function (item) {
-                //item.token= localStorage.getItem("token");
+                item.token= localStorage.getItem("token");
                 return $.ajax({
                     type: "POST",
-                    url: "/teacher/deleteClass",
+                    url: "/teacher/deleteLongQuestion",
                     data: item
                 }).done(function () {
                     $("#jsGrid_users").jsGrid("loadData");
@@ -83,11 +85,9 @@
             },
         },
         fields: [
-            {name: "classID", title: "ID", type: "text", width: 150, editing: false, itemTemplate: function(value) {
-                    var $link = $("<a>").attr("href", "viewTests/"+(value)).text(value);
-                    return $($link);
-                }},
-            {name: "name", title: "Class Name", type: "text", width: 150, editing: true, validate: { validator: "required", message: "The class name is required."}},
+            {name: "lqID", title: "ID", type: "text", width: 150, editing: false, visible: false},
+            {name: "lqText", title: "Question", type: "text", width: 150, editing: true, validate:  { validator: "required", message: "Please enter the question."}},
+            {name: "marks", title: "Marks", type: "number", width: 150, editing: true, validate:  { validator: "range", message: "The marks should be between 1 and 100", param: [1, 100]}},
             {type: "control"}
         ]
     });
