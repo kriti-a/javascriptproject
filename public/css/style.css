@@ -27,7 +27,9 @@ background-color: white;
     border-radius: 5px;
     display: inline-block;
     margin-right: 10px;
-    background-color: #f2dede;
+    margin-top: 20px;
+    background-color: #2e6da4;
+    color: #f7f7f7;
 }
 
 .tcard:hover {
@@ -47,39 +49,96 @@ background-color: white;
 }
 
 .noRows{
-
     text-align: center;
     size: 30px;
     color: #2e6da4;
 }
 
-.subHeadings{
-    color: #333333;
-}
-
 .resultGraph{
+
     margin-top: 40px;
 }
 
-#resTabel tr:nth-child(even){background-color: #f2f2f2;}
-
-#resTabel tr:hover {background-color: #ddd;}
-
-#resTabel th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #e4b9b9;
-    color: white;
+.subHeadings{
+    color: #5e5e5e;
+    background-color: lightblue;
+    border-radius: 5px;
 }
 
-#resTabel {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 500px;
+* {
+    box-sizing: border-box;
 }
 
-#resTabel td, #resTabel th {
-    border: 1px solid #ddd;
-    padding: 8px;
+.heading {
+    font-size: 25px;
+    margin-right: 25px;
+    color: #2e6da4;
+
+}
+
+.fa {
+    font-size: 25px;
+}
+
+/* Three column layout */
+.side {
+    float: left;
+    width: 15%;
+    margin-top:10px;
+    margin-left: 30px;
+    color: #5e5e5e;
+}
+
+.middle {
+    margin-top:10px;
+    float: left;
+    width: 50%;
+    color: #5e5e5e;
+}
+
+/* Place text to the right */
+.right {
+    text-align: right;
+    width: 20%;
+    color: #5e5e5e;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+    color: #5e5e5e;
+}
+
+/* The bar container */
+.bar-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    color: #5e5e5e;
+}
+
+.bar-5 {
+    width: 40%;
+    height: 18px;
+    background-color: #d0e9c6;
+    display: inline-block;
+}
+
+.bar-4 {
+    width: 40%;
+    height: 18px;
+    background-color:#e4b9b9;
+    display: inline-block;
+}
+
+@media (max-width: 400px) {
+    .side, .middle {
+        width: 100%;
+    }
+
+    .right {
+        display: none;
+    }
 }

@@ -24,7 +24,6 @@ var users = require('./routes/users');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
