@@ -2,7 +2,7 @@
 var express    = require('express'),
     mysql      = require('mysql'),
     bodyParser = require('body-parser');
-
+var passport = require('passport');
 var router = express.Router();
 
 //Set up data connection
@@ -30,7 +30,7 @@ var sqlSelectTFAssessments = "SELECT ass.assessmentID, ass.Name, ass.passingMark
 var sqlgetmcqAssessmentResults = "select derived2.userid, derived2.assessmentid, coalesce( sum(derived.Obtained),0) as Obtained from (select mcq.correctOption, mcq.marks, sass.answer, sass.userid, sass.assessmentid, sass.questionID, CASE WHEN sass.answer = mcq.correctOption THEN mcq.marks ELSE 0 END as 'Obtained' from student_assessment sass inner join (SELECT distinct(userid) as userid FROM student_assessment where assessmentID = ?) bsass on bsass.userid = sass.userID inner join mc_questions mcq on mcq.mcqID = sass.questionID where sass.assessmentID = ? order by sass.questionID) derived  right join (SELECT userid, cass.assessmentid, 0 as Obtained from user_class uclass inner join  class_assessment cass on  uclass.classId = cass.classID where cass.assessmentid = ? ) derived2 on derived2.userid = derived.userid  group by derived2.userid";
 var sqlInsertResults = "INSERT INTO assessment_results (assessmentID,userID,obtainedmarks)VALUES(?,?,?)";
 var sqlgetTFAssessmentResults = "select derived2.userid, derived2.assessmentid, coalesce( sum(derived.Obtained),0) as Obtained from (select tfq.correctOption, tfq.marks, sass.answer, sass.userid, sass.assessmentid, sass.questionID, CASE WHEN sass.answer = tfq.correctOption THEN tfq.marks ELSE 0 END as 'Obtained' from student_assessment sass inner join (SELECT distinct(userid) as userid FROM student_assessment where assessmentID = ?) bsass on bsass.userid = sass.userID inner join tf_questions tfq on tfq.tfqID = sass.questionID where sass.assessmentID = ? order by sass.questionID) derived right join (SELECT userid, cass.assessmentid, 0 as Obtained from user_class uclass inner join  class_assessment cass on  uclass.classId = cass.classID where cass.assessmentid = ? ) derived2 on derived2.userid = derived.userid  group by derived2.userid";
-var sqlgetLongUserIds = "Select distinct concat(u.firstName, ' ',  u.lastName) as uName, coalesce(assr.obtainedMarks, 0) as 'Obtained',  CASE WHEN coalesce(assr.obtainedMarks, 0) != 0 THEN 'Added' ELSE 'Not Added' END as 'results', u.userID, sass.assessmentID  from users u  inner join  student_assessment  sass  on u.userID = sass.userID left join assessment_results assr on assr.assessmentID = sass.assessmentID and u.userID = assr.userID where sass.assessmentID = ? group by uName";
+var sqlgetLongUserIds = "Select distinct concat(u.firstName, ' ',  u.lastName) as uName, coalesce(assr.obtainedMarks, 0) as 'Obtained',  CASE WHEN coalesce(assr.obtainedMarks, 0) != 0 THEN 'Added' ELSE 'Not Added' END as 'results', u.userID, sass.assessmentID  from users u  inner join  student_assessment  sass  on u.userID = sass.userID left join assessment_results assr on assr.assessmentID = sass.assessmentID and u.userID = assr.userID where sass.assessmentID = ? group by u.userid";
 var sqlgetUserLongAssignment = "SELECT sass.userID as userID, loq.lqText as Text,loq.marks as Marks, sass.questionID as questionID, sass.assessmentID as assessmentID, sass.answer as answer FROM student_assessment sass inner join long_questions loq on loq.lqID = sass.questionID WHERE userID = ? AND assessmentID = ?";
 //----------------------------------------------------
 
@@ -93,11 +93,13 @@ router.post('/addclassaction', function (req, res) {
 * */
 
 router.get('/assessments', function (req, res) {
-    connection.query(sqlSelectLongQAssessments, 2, function (err, resultL) {
+
+    var loggedin = req.session.passport.user.user_id;
+    connection.query(sqlSelectLongQAssessments, loggedin, function (err, resultL) {
         if(err) throw err;
-        connection.query(sqlSelectMCQAssessments, 2, function (err, resultM) {
+        connection.query(sqlSelectMCQAssessments, loggedin, function (err, resultM) {
             if(err) throw err;
-            connection.query(sqlSelectTFAssessments, 2, function (err, resultTF) {
+            connection.query(sqlSelectTFAssessments, loggedin, function (err, resultTF) {
                 if(err) throw err;
                 res.render('teacher/alltests', {resultL: resultL, resultM: resultM, resultTF: resultTF});
             });
@@ -113,7 +115,6 @@ router.get('/submitMCQ/:id', function (req, res) {
         {
             var userid = result[i].userid;
             var obtained = result[i].Obtained;
-            console.log(userid, obtained);
             connection.query(sqlInsertResults, [assessmentid,userid, obtained], function (err, result) {
                 if(err) throw err;
             });
@@ -133,7 +134,6 @@ router.get('/submitTF/:id', function (req, res) {
         {
             var userid = result[i].userid;
             var obtained = result[i].Obtained;
-            console.log(userid, obtained);
             connection.query(sqlInsertResults, [assessmentid,userid, obtained], function (err, result) {
                 if(err) throw err;
             });
@@ -145,6 +145,7 @@ router.get('/submitTF/:id', function (req, res) {
 });
 
 router.get('/allsubmissions/:id', function (req, res) {
+
     assessmentid = req.params.id;
     connection.query(sqlgetLongUserIds, assessmentid, function (err, result) {
         if(err) throw err;

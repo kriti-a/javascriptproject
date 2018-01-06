@@ -5,8 +5,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -20,12 +18,26 @@
 </head>
 <body>
 <div class="container">
-    <% include chats.ejs%>
-        <a ></a>
-        <input type="hidden" value="<%= id%>" id="inn">
 
-
-
+    <div id="messageArea" class="row">
+        <div class="col-md-4" >
+            <div class="well">
+                <h3>Online Users</h3>
+                <ul class="list-group" id="users"></ul>
+            </div>
+        </div>
+        <div class="col-md-8" >
+            <div class="chat" id="chat"></div>
+            <form id="messageForm">
+                <div class="form-group" >
+                    <label>Enter Message</label>
+                    <textarea id="message" class="form-control"></textarea>
+                    <br/>
+                    <input type="submit" class="btn btn-success" value="Send Message"/>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <script>
 
@@ -40,34 +52,26 @@
         var $messageArea = $('#messageArea');
         var $users = $('#users');
         var $username = $('#username');
-        var groupid = document.getElementById('inn').value.toString();
-
-        socket.on('updatechat', function (data) {
-            $chat.append('<div class="well">'+data.msg+'</div>');
-        });
-
-        socket.on('connect', function(){
-            // call the server-side function 'adduser' and send one parameter (value of prompt)
-            socket.emit('send groupid', groupid);
-        });
-
 
         $messageForm.submit(function (e) {
             e.preventDefault();
-            socket.emit('send message', [$message.val(), groupid]);
+            socket.emit('send message', $message.val());
             $message.val('');
         });
 
-
         socket.on('new message', function (data) {
             $chat.append('<div class="well"><strong>'+data.user+': </strong>'+data.msg+'</div>');
+        });
+
+        socket.on('updatechat', function (data) {
+            $chat.append('<div class="well">'+data.msg+'</div>');
         });
 
         $userForm.submit(function (e) {
             e.preventDefault();
             socket.emit('new user', $username.val(),function (data) {
                 if(data){
-                 //   $userFormArea.hide();
+                    //   $userFormArea.hide();
                     $messageArea.show();
                 }
             });
@@ -75,6 +79,7 @@
         });
 
         socket.on('get users', function (data) {
+            console.log()
             var html ='';
             for (var i = 0; i < data.length;i++)
             {
@@ -83,9 +88,6 @@
             $users.html(html);
         });
 
-        /*socket.on('damn', function (data) {
-            alert(data);
-        });*/
     });
 </script>
 </body>

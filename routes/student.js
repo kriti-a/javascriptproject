@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
     database : 'ASSESS_EASY'
 });
 
-var userid = 4;
+//var userid = 4;
 var assessmentid="";
 var sqlgetresults = "Select a.name as 'Name',a.totalMarks as Total,a.passingMarks as Passing,ar.obtainedMarks as Obtained, CASE when a.passingMarks > ar.obtainedMarks then 'Failed'\n" +
     "else 'Passed'\n" +
@@ -71,6 +71,7 @@ var sqlgettfquestions = "SELECT a.name as 'Name',\n" +
     "a.assessmentID = tfaq.assessmentID  where  tfaq.assessmentID = ?";
 
 router.get('/results', function (req, res) {
+    var userid = req.session.passport.user.user_id;
     connection.query(sqlgetresults, userid, function (err, result) {
         if(err) throw err;
         res.render('student/results', {result: result})
@@ -79,7 +80,8 @@ router.get('/results', function (req, res) {
 
 
 router.get('/assessments', function (req, res) {
-
+    console.log(req.session.passport.user.user_id);
+    var userid = req.session.passport.user.user_id;
     connection.query(sqlgetalltests, userid, function (err, result) {
         if(err) throw err;
         var a = req.query.lg;
@@ -106,6 +108,8 @@ router.get('/assessments', function (req, res) {
 
 router.get('/givetest/:id', function (req, res) {
     assessmentid = req.params.id;
+    console.log(req.session.passport.user.user_id);
+    var userid = req.session.passport.user.user_id;
     connection.query(selectifalreadysubmitted, [userid, assessmentid], function (err, result) {
         if(err) throw err;
        if ( parseInt(result[0].C) == 0) {
@@ -187,6 +191,8 @@ router.get('/givetest/:id', function (req, res) {
 
 //redirecting to the add new record page.
 router.post('/addanswer', function(req, res) {
+    console.log(req.session.passport.user.user_id);
+    var userid = req.session.passport.user.user_id;
   for (var i = 0;i<req.body.answer.length;i++)
     {
         var answer = req.body.answer[i];
@@ -201,6 +207,8 @@ router.post('/addanswer', function(req, res) {
 });
 
 router.post('/addtf', function(req, res) {
+    console.log(req.session.passport.user.user_id);
+    var userid = req.session.passport.user.user_id;
     for (var i = 0;i<req.body.questionid.length;i++)
     {
         var answer = req.body.option[i];
@@ -215,6 +223,8 @@ router.post('/addtf', function(req, res) {
 });
 
 router.post('/addmcq', function(req, res) {
+    console.log(req.session.passport.user.user_id);
+    var userid = req.session.passport.user.user_id;
     console.log(req.body);
     for (var i = 0;i<req.body.questionid.length;i++)
     {
