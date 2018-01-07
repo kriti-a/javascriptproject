@@ -1,4 +1,7 @@
 
+
+
+
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,8 +41,9 @@
                     <a href="/viewClasses"><i class="fa fa-bar-chart-o fa-fw"></i> Manage Class</a>
                 </li>
                 <li>
-                    <a href="chat/1"><i class="fa  fa-comments fa-fw"></i>Chat</a>
+                    <a href="../../teacher/assessments"><i class="fa fa-edit fa-fw"></i>Upload Results</a>
                 </li>
+
             </ul>
         <% } else { %>
             <!-- student dashboard -->
@@ -48,17 +52,18 @@
                     <a href="/student_dashboard"><i class="fa fa-dashboard fa-fw"></i>Student's Dashboard</a>
                 </li>
                 <li id = "student-class-section">
+                    <a href="../../student/classes"><i class="fa fa-th-list fa-fw"></i>View Classes</a>
+                </li>
+                <li id = "student-class-section">
                     <a href="/manage_class"><i class="fa fa-table fa-fw"></i>Manage Class</a>
                 </li>
                 <li>
-                    <a href=""><i class="fa fa-edit fa-fw"></i>Take Test</a>
+                    <a href="../../student/assessments"><i class="fa fa-edit fa-fw"></i>View Assessments</a>
                 </li>
                 <li>
-                    <a href="student/results"><i class="fa fa-bar-chart-o fa-fw"></i>Results</a>
+                    <a href="../../student/results"><i class="fa fa-bar-chart-o fa-fw"></i>Results</a>
                 </li>
-                <li>
-                    <a href="chat/1"><i class="fa  fa-comments fa-fw"></i>Chat</a>
-                </li>
+
             </ul>
             <% }  %>
         </div>

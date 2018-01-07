@@ -28,11 +28,17 @@
     <% include ../side_menu.ejs %>
 
     <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header"><%= assname %></h3>
+            </div>
+        </div>
         <div class="container">
             <div class="row">
                 <div class="col col-lg-11">
-                    <h3><%= assname %></h3>
                     <div class="form-row">
+
+
                         <form action="../addanswer" method="post">
 
                     <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
