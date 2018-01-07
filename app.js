@@ -45,7 +45,6 @@ app.use(express.static(__dirname + '/public'));
 
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 
-
 // Initialize session and passport - Elias
 
 var options = {
@@ -88,7 +87,15 @@ app.use('/',manageClass);
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
 var teacher_dashboard = require('./routes/teacher_dashboard.js');
+
 //var chats = require('./routes/chatroom');
+
+
+var viewClasses = require('./routes/viewClasses');
+var viewTests = require('./routes/viewTests');
+var questions = require('./routes/Questions');
+
+
 var students = require('./routes/student.js');
 
 // if there are any pages that start after localhost:8080/ then route them to index
@@ -104,30 +111,11 @@ app.use('/teacher_d',teacher_dashboard);
 // -----For the Chat
 //app.use('/chat', chats);
 
-// ------- Student -----
-
-
+app.use('/viewClasses', viewClasses);
+app.use('/viewTests', viewTests);
+app.use('/questions', questions);
 app.use('/student/', students);
-
 //-----------------------------------------------------------------------------------
-
-/*app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});*/
 
 // ---- Do not remove this commented code -- Momal
 

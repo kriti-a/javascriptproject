@@ -1,52 +1,185 @@
 <% include ../header.ejs %>
 <head>
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../css/metisMenu.min.css" rel="stylesheet">
-    <link href="../../css/sb-admin-2.css" rel="stylesheet">
-    <link href="../../css/morris.css" rel="stylesheet">
-    <link href="../../css/font-awesome.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.44/css/bootstrap-datetimepicker.min.css">
     <!-- scripts -->
-    <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/metisMenu.min.js"></script>
-    <script src="../../js/raphael.min.js"></script>
-    <script src="../../js/morris.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.44/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+
 </head>
+<body>
 
-<div id="wrapper">
+<div id="jsGrid" style="margin-left: 250px;"></div>
 
-    <% include ../side_menu.ejs %>
+<script>
+    //<![CDATA[
+   // window.onload=function(){
+        $(function() {
 
-    <div id="page-wrapper">
-        <!--displaying the classes here-->
-        <div class="container">
-            <table class="table table-striped table-hover table-bordered">
-                <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Assessment Name</th>
-                    <th>Deadline</th>
-                    <th>Total Marks</th>
-                    <th>Passing Marks</th>
-                    <th>Assessment Type</th>
-                </tr>
-                </thead>
-                <tbody>
-                <% result.forEach((result) => { %>
-                <tr>
-                    <td><%= result.assessmentID %></td>
-                    <td><%= result.name %></td>
-                    <td><%= result.deadline %></td>
-                    <td><%= result.totalMarks %></td>
-                    <td><%= result.passingMarks %></td>
-                    <td><%= result.assessmentType %></td>
-                </tr>
-                <% }) %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+            var SolRiaDateTimeField = function (config) {
+                jsGrid.Field.call(this, config);
+            };
+            SolRiaDateTimeField.prototype = new jsGrid.Field({
+                sorter: function (date1, date2) {
+                    return new Date(date1) - new Date(date2);
+                },
+
+                itemTemplate: function (value) {
+                    if (value === null) {
+                        return '';
+                    } else {
+                        return moment(value).format('YYYY-MM-DD');
+                    }
+                },
+
+                insertTemplate: function (value) {
+                    this._insertPicker = $('<input>').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                        defaultDate: moment(),
+                        widgetPositioning: {
+                            horizontal: 'auto',
+                            vertical: 'bottom'
+                        }
+                    });
+
+                    this._insertPicker.data('DateTimePicker').date(moment());
+                    return this._insertPicker;
+                },
+
+                editTemplate: function (value) {
+                    this._editPicker = $('<input>').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                        widgetPositioning: {
+                            horizontal: 'auto',
+                            vertical: 'bottom'
+                        }
+                    });
+
+                    if (value !== null) {
+                        this._editPicker.data('DateTimePicker').defaultDate(moment(value));
+                        this._editPicker.data('DateTimePicker').date(moment(value));
+                    }
+                    return this._editPicker;
+                },
+
+                insertValue: function () {
+                    var insertValue = this._insertPicker.data('DateTimePicker').date();
+                    if (typeof insertDate !== 'undefined' && insertDate !== null) {
+                        return insertDate.format('YYYY-MM-DD');
+                    } else {
+                        return null;
+                    }
+                },
+
+                editValue: function () {
+                    var editValue = this._editPicker.data('DateTimePicker').date();
+                    if (typeof editValue !== 'undefined' && editValue !== null) {
+                        return editValue.format('YYYY-MM-DD');
+                    } else {
+                        return null;
+                    }
+                }
+            });
+            jsGrid.fields.solRiaDateTimeField = SolRiaDateTimeField;
+
+
+            $("#jsGrid").jsGrid({
+                height: "500px",
+                width: "82%",
+                editing: true,
+                autoload: true,
+                inserting: true,
+                paging: true,
+                sorting: true,
+                controller: {
+
+                    loadData: function (filter) {
+                        var data = $.Deferred();
+                        $.ajax({
+                            type: "GET",
+                            contentType: "application/json; charset=utf-8",
+                            url: "/teacher/getTestsName/"+<%= id %>,
+                            dataType: "json"
+                        }).done(function (response) {
+                            response = $.grep(response, function (item) {
+                                return (!filter.assessmentID || item.assessmentID.indexOf(filter.assessmentID) > -1)
+                                    && (!filter.name || item.name.indexOf(filter.name) > -1)
+                                    && (!filter.deadline || item.deadline.indexOf(filter.deadline) > -1)
+                                    && (!filter.totalMarks || item.totalMarks.indexOf(filter.totalMarks) > -1)
+                                    && (!filter.passingMarks || item.passingMarks.indexOf(filter.passingMarks) > -1)
+                                    && (!filter.assessmentType || item.assessmentType.indexOf(filter.assessmentType) > -1)
+
+
+                            });
+                            //response.push({"token" : "\"" + localStorage.getItem("token") + "\"" });
+                            data.resolve(response);
+                            console.log(response);
+                        });
+                        return data.promise();
+                    },
+                    insertItem: function (item) {
+
+                        return $.ajax({
+                            type: "POST",
+                            url: "/teacher/addTest/"+<%= id %>,
+                            data: item
+                        }).done(function () {
+                            $("#jsGrid").jsGrid("loadData");
+                        });
+                    },
+                    updateItem: function (item) {
+
+                        return $.ajax({
+                            type: "POST",
+                            url: "/teacher/updateTest",
+                            data: item
+                        }).done(function () {
+                            $("#jsGrid").jsGrid("loadData");
+                        });
+                    },
+                    deleteItem: function (item) {
+                        item.token= localStorage.getItem("token");
+                        return $.ajax({
+                            type: "POST",
+                            url: "/teacher/deleteTest",
+                            data: item
+                        }).done(function () {
+                            $("#jsGrid").jsGrid("loadData");
+                        });
+                    },
+                },
+                fields: [
+                    {name: "assessmentID", title: "ID", type: "text", width: 150, editing: false, itemTemplate: function(value, item) {
+                            var $link = $("<a>").attr("href", "../Questions/"+(value)+"-"+(item.assessmentType)).text(value);
+                            return $($link);
+                        }},
+                    {name: "name", title: "Test Name", type: "text", width: 150, editing: true, validate: { validator: "required", message: "The test name is required"}},
+                    {name: "deadline", title: "Deadline", type: "solRiaDateTimeField", width: 150},
+                    {name: "totalMarks", title: "Total Marks", type: "number", width: 150, editing: true, validate: { validator: "range", message: "The total marks should be between 5 and 100", param: [5, 100]}},
+                    {name: "passingMarks", title: "Passing Marks", type: "number", width: 150, editing: true, validate: { validator: "range", message: "The passing marks should be between 5 and 100", param: [5, 100]}},
+                    {name: "assessmentType", title: "Test Type", type: "select", items: [{Name: "TF", Id: 0}, {Name: "MCQ", Id: 1}, {Name: "LQ", Id: 2}], valueField: "Name", textField: "Name", editing: false},
+                    {type: "control"}
+                ]
+
+            });
+
+        });
+
+ //   }//]]>
+
+
+</script>
+
+
 </body>
 
 </html>
+
