@@ -1,0 +1,73 @@
+<% include ../header.ejs %>
+<head>
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/morris.css" rel="stylesheet">
+    <link href="../../../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../../../js/jquery.min.js"></script>
+    <script src="../../../js/bootstrap.min.js"></script>
+    <script src="../../../js/metisMenu.min.js"></script>
+    <script src="../../../js/raphael.min.js"></script>
+    <script src="../../../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <title>Results</title>
+
+</head>
+
+<body>
+
+
+<div id="wrapper">
+    <% try
+    {  var myvar = message.toString();
+    if (myvar.toString()=='success'){%><script>swal("Test Submitted Successfully","Good Luck!", "success");</script><%}
+    else{%><script> swal("There was some error.","Please try again!", "error");</script><%}
+    }
+    catch(err)
+    {
+
+    }
+    %>
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div style="margin-top: 20px" class="col col-lg-11">
+
+                    <div class="form-row">
+                        <form action="../../addresult" method="post">
+
+                            <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
+                                <tbody>
+
+                                <% result.forEach((result) => { %>
+                                <tr style="border-color: transparent">
+                                    <td style="border:none;padding: 15px;">
+                                        <div class="form-group">
+                                            <input value="<%= result.assessmentID%>" name="assessmentid[]" class="form-control" type="hidden" />
+                                            <input value="<%= result.userID%>" name="userid[]" class="form-control" type="hidden" />
+                                            <label>Question: <%= result.Text %></label>
+                                            <br><textarea readonly name="answer[]" class="form-control"><%= result.answer%></textarea>
+                                            <small class="form-text text-muted">Total Marks: <%= result.Marks %></small>
+                                            <input style="width:30%" placeholder="<%= result.Marks %>"  class="form-control" type="number" min="0" max="<%= result.Marks %>" name="marks[]" >
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% })%>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-success" >Submit</button>
+                            <button type="button" onclick="goback()" class="btn btn-danger" >Cancel</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

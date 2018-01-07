@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
 
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -45,10 +46,20 @@ router.get('/stu_teach_dashboard', authenticationMiddleware(), function(req, res
 
 
 router.post('/login',
-    passport.authenticate('local',{
-        failureRedirect:'/login',
-        successRedirect: '/stu_teach_dashboard'
-         }));
+    passport.authenticate('local'), function(req, res) {
+        connection.query('select * from users inner join user_access on user_access.userID = users.userID inner join access_level on access_level.accessID = user_access.accessID where users.userID=' +res.req.user.user_id,
+            function (err, userAcessInfo) {
+                if (err) throw err;
+                for (var i in userAcessInfo) {
+                    var acessType = userAcessInfo[i].accessType;
+                }
+                if(acessType === '1'){
+                    res.redirect('/teacher_d');
+                } else {
+                    res.redirect('/student_dashboard');
+                }
+                });
+    });
 
 router.get('/logout', function(req, res) {
     req.logout();
@@ -100,12 +111,14 @@ router.post('/registration', function(req, res) {
 
         const errors = req.validationErrors();
         if (errors){
-            console.log('errors: ${JSON.stringify(errors)}');
+            console.log('errors:' + JSON.stringify(errors));
             res.render('registration', {
                 title: 'Registration Error',
                 //erro1: 'Firstname field cannot be empty.',
                 errors: errors
+
             });
+          //  console.log(errors.toString());
         }
         else{
             const firstName = req.body.firstName;
@@ -126,7 +139,7 @@ router.post('/registration', function(req, res) {
                         const user_id =results[0];
                         console.log(results[0]);
                         req.login(user_id, function(err) {
-                            res.redirect('/stu_teach_dashboard');
+                            res.redirect('/student_dashboard');
                         });
 
 

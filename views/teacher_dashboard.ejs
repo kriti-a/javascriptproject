@@ -26,67 +26,15 @@
     <!-- for defining teacher dashboard specific styles-->
     <link href="css/style.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <body>
 
 <div id="wrapper">
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#javascript:">Assess Easy</a>
-        </div>
-        <!-- /.navbar-header -->
-
-        <ul class="nav navbar-top-links navbar-right">
-            <!-- /.dropdown -->
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="#javascript:"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                    </li>
-                </ul>
-            </li>
-            <!-- /.dropdown -->
-        </ul>
-        <!-- /.navbar-top-links -->
-
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                    </li>
-                    <li>
-                        <a><i class="fa fa-table fa-fw"></i> Class<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Create New Class</a>
-                            </li>
-                            <li>
-                                <a href="#">Edit Existing Class </a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-edit fa-fw"></i> Take Test</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Results</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
-    </nav>
+    <% include side_menu.ejs %>
 
     <div id="page-wrapper">
         <div class="row">
@@ -94,12 +42,27 @@
                 <h1 class="page-header">Teacher Dashboard</h1>
             </div>
         </div>
+        <div class="subHeadings"><p style="font-size: 30px; margin-left: 10px;">Subjects you are incharge of </p></div>
+        <% var status = message.toString();
+        if(status == 'empty'){%>
 
-        <%subject.forEach(function (subject) {  %>
+        <div class="cardContainer">
+
+            <div class="noRows">
+                <i class="fa fa-file" style="font-size:60px;color:lightblue; margin-top: 50px;"></i>
+                <p style="font-size:20px;color:lightblue;"> No assessment created yet</p>
+
+            </div>
+
+
+        </div>
+
+        <%}else if(status == 'available'){subject.forEach(function (subject) {  %>
         <div class="tcard">
             <div class="tcontainer">
                 <h4><b><%= subject.name %></b></h4>
-                <hr/>
+                <hr style="border:1px solid #f1f1f1"/>
+
                 <%totalAssess.forEach(function(totalAssess){%>
                 <%if(totalAssess.classID == subject.classID){%>
                 <p >Total Tests:<%=totalAssess.id%> </p>
@@ -114,11 +77,55 @@
                 <%}})%>
             </div>
         </div>
-      <%})%>
+        <%})}%>
+        <div  class="resultGraph">
+            <div class="subHeadings"><p style="font-size: 30px;margin-left: 10px;"> Assessment Result Statistics</p></div>
+            <div style="margin-top: 30px;">
+                <% var res = message2.toString();
+                var sub = message.toString();
 
+
+                if(sub == 'empty' || res == 'empty'){%>
+
+                <div class="cardContainer">
+
+                    <div class="noRows">
+                        <i class="fa fa-file" style="font-size:60px;color:lightblue; margin-top: 50px;"></i>
+                        <p style="font-size:20px;color:lightblue;"> No Results to Display</p>
+
+                    </div>
+
+                </div>
+
+                <% }else if(sub == 'available' && res == 'available'){ subject.forEach(function (subject) {  %>
+                <span class="heading" ><%=subject.name%></span>
+                <hr style="border:3px solid #f1f1f1">
+                <%pass.forEach(function (pass) { %>
+                <%fail.forEach(function (fail) { %>
+                    <%if(fail.aID == pass.aID && ( fail.cID == subject.classID || pass.cID == subject.classID)){%>
+                <div class="row">
+                    <div class="side">
+                        <div>Name : <%=pass.aName%></div>
+                    </div>
+                    <div class="middle">
+                        <div class="bar-container">
+                            <div class="bar-5" title="Max Marks: <%=pass.TotalMarks%>">Passed : <%=pass.passed%></div>
+                            <div class="bar-4" title="Min Marks: <%=fail.passMarks%>">Failed : <%=fail.failed%> </div>
+                        </div>
+                    </div>
+                    <div class="side right">
+                        <div>Highest Score :<%=pass.maximumScore%>  Lowest Score :<%=fail.minimumScore%> </div>
+                    </div>
+                </div>
+                <%}})})%>
+                <hr style="border:1px solid #f1f1f1">
+                <%})}%>
+            </div>
+
+
+        </div>
     </div>
 </div>
-
 
 
 <!-- jQuery -->

@@ -19,6 +19,17 @@ var loggedInTeacher = 1; //This should be a dynamic value coming from the sessio
 
 //display classes
 
+// -------------- Moomal ----For Results and Autocheck-------------------------
+var sqlSelectMCQAssessments = "SELECT ass.assessmentID, ass.Name, ass.passingMarks as 'Passing', ass.totalMarks as 'Total',(SELECT 'Long Questions')  'asstype', ass.deadline, CASE WHEN ass.deadline < NOW() then 'Finished' ELSE  'Open' END as 'Due' FROM assessment ass inner join class_assessment cass on ass.assessmentID = cass.assessmentID inner join classes class on cass.classID = class.classID where class.createdby = ? and ass.assessmentType = 2";
+var sqlSelectLongQAssessments = "SELECT ass.assessmentID, ass.Name, ass.passingMarks as 'Passing', ass.totalMarks as 'Total',(SELECT 'Long Questions')  'asstype', ass.deadline, CASE WHEN ass.deadline < NOW() then 'Finished' ELSE  'Open' END as 'Due' FROM assessment ass inner join class_assessment cass on ass.assessmentID = cass.assessmentID inner join classes class on cass.classID = class.classID where class.createdby = ? and ass.assessmentType = 1";
+var sqlSelectTFAssessments = "SELECT ass.assessmentID, ass.Name, ass.passingMarks as 'Passing', ass.totalMarks as 'Total',(SELECT 'Long Questions')  'asstype', ass.deadline, CASE WHEN ass.deadline < NOW() then 'Finished' ELSE  'Open' END as 'Due' FROM assessment ass inner join class_assessment cass on ass.assessmentID = cass.assessmentID inner join classes class on cass.classID = class.classID where class.createdby = ? and ass.assessmentType = 3";
+var sqlgetmcqAssessmentResults = "select derived2.userid, derived2.assessmentid, coalesce( sum(derived.Obtained),0) as Obtained from (select mcq.correctOption, mcq.marks, sass.answer, sass.userid, sass.assessmentid, sass.questionID, CASE WHEN sass.answer = mcq.correctOption THEN mcq.marks ELSE 0 END as 'Obtained' from student_assessment sass inner join (SELECT distinct(userid) as userid FROM student_assessment where assessmentID = ?) bsass on bsass.userid = sass.userID inner join mc_questions mcq on mcq.mcqID = sass.questionID where sass.assessmentID = ? order by sass.questionID) derived  right join (SELECT userid, cass.assessmentid, 0 as Obtained from user_class uclass inner join  class_assessment cass on  uclass.classId = cass.classID where cass.assessmentid = ? ) derived2 on derived2.userid = derived.userid  group by derived2.userid";
+var sqlInsertResults = "INSERT INTO assessment_results (assessmentID,userID,obtainedmarks)VALUES(?,?,?)";
+var sqlgetTFAssessmentResults = "select derived2.userid, derived2.assessmentid, coalesce( sum(derived.Obtained),0) as Obtained from (select tfq.correctOption, tfq.marks, sass.answer, sass.userid, sass.assessmentid, sass.questionID, CASE WHEN sass.answer = tfq.correctOption THEN tfq.marks ELSE 0 END as 'Obtained' from student_assessment sass inner join (SELECT distinct(userid) as userid FROM student_assessment where assessmentID = ?) bsass on bsass.userid = sass.userID inner join tf_questions tfq on tfq.tfqID = sass.questionID where sass.assessmentID = ? order by sass.questionID) derived right join (SELECT userid, cass.assessmentid, 0 as Obtained from user_class uclass inner join  class_assessment cass on  uclass.classId = cass.classID where cass.assessmentid = ? ) derived2 on derived2.userid = derived.userid  group by derived2.userid";
+var sqlgetLongUserIds = "Select distinct concat(u.firstName, ' ',  u.lastName) as uName, coalesce(assr.obtainedMarks, 0) as 'Obtained',  CASE WHEN coalesce(assr.obtainedMarks, 0) != 0 THEN 'Added' ELSE 'Not Added' END as 'results', u.userID, sass.assessmentID  from users u  inner join  student_assessment  sass  on u.userID = sass.userID left join assessment_results assr on assr.assessmentID = sass.assessmentID and u.userID = assr.userID where sass.assessmentID = ? group by uName";
+var sqlgetUserLongAssignment = "SELECT sass.userID as userID, loq.lqText as Text,loq.marks as Marks, sass.questionID as questionID, sass.assessmentID as assessmentID, sass.answer as answer FROM student_assessment sass inner join long_questions loq on loq.lqID = sass.questionID WHERE userID = ? AND assessmentID = ?";
+//----------------------------------------------------
+
 router.get('/getClassesName', function(req, res){
 
     var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + loggedInTeacher; //To get all the classes taught by a teacher
@@ -33,12 +44,10 @@ router.get('/getClassesName', function(req, res){
 
 router.post('/addClass', function (req, res) {
 
-    console.log("kdmwked");
     var sqlInsertClass = "INSERT INTO classes (name, createdOn, createdBy) values('" + req.body.name + "', now(), " + loggedInTeacher + ")";
 
     connection.query(sqlInsertClass, function (err, result, fields) {
        if(err) throw err;
-       console.log("eadmemd");
        res.json("Class was successfully added!");
     });
 });
@@ -66,24 +75,6 @@ router.post('/deleteClass', function (req, res) {
        if(err) throw err;
        res.json("Class deleted");
     });
-
-    //Now we have to delete all the tests in the class
-
-  /*  var sqlDeleteClassAssessment = "DELETE FROM class_assessment WHERE class_assessment.classID = " + req.body.classID;
-
-    connection.query(sqlDeleteClassAssessment, function (err, result, fields) {
-       if(err) throw err;
-       console.log("Done");
-       console.log("Done");
-    });
-
-    var sqlDeleteClassTest = "DELETE FROM assessment WHERE assessmentID IN (SELECT assessmentID FROM class_assessment where classID = " + req.body.classID + ")";
-
-    connection.query(sqlDeleteClassTest, function (err, result, fields) {
-       if(err) throw err;
-       console.log("Done");
-    });*/
-
 });
 
 //---------------------------------------End of Class functions-------------------------------------------------------
@@ -359,6 +350,107 @@ router.post('/deleteLongQuestion', function (req, res) {
 //---------------------------------------End of long question functions-------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------//
+
+/*
+* --------------- For Autocheck and Point System Results
+* --------------- Moomal
+* */
+
+router.get('/assessments', function (req, res) {
+    connection.query(sqlSelectLongQAssessments, 2, function (err, resultL) {
+        if(err) throw err;
+        connection.query(sqlSelectMCQAssessments, 2, function (err, resultM) {
+            if(err) throw err;
+            connection.query(sqlSelectTFAssessments, 2, function (err, resultTF) {
+                if(err) throw err;
+                res.render('teacher/alltests', {resultL: resultL, resultM: resultM, resultTF: resultTF});
+            });
+        });
+    });
+});
+
+router.get('/submitMCQ/:id', function (req, res) {
+    assessmentid = req.params.id;
+    connection.query(sqlgetmcqAssessmentResults, [assessmentid,assessmentid,assessmentid], function (err, result, fields) {
+        if(err) throw err;
+        for (var i=0;i<result.length;i++)
+        {
+            var userid = result[i].userid;
+            var obtained = result[i].Obtained;
+            console.log(userid, obtained);
+            connection.query(sqlInsertResults, [assessmentid,userid, obtained], function (err, result) {
+                if(err) throw err;
+            });
+        }
+
+        res.redirect('../../teacher/assessments?sc=sc');
+    });
+
+});
+
+
+router.get('/submitTF/:id', function (req, res) {
+    assessmentid = req.params.id;
+    connection.query(sqlgetTFAssessmentResults, [assessmentid,assessmentid,assessmentid], function (err, result, fields) {
+        if(err) throw err;
+        for (var i=0;i<result.length;i++)
+        {
+            var userid = result[i].userid;
+            var obtained = result[i].Obtained;
+            console.log(userid, obtained);
+            connection.query(sqlInsertResults, [assessmentid,userid, obtained], function (err, result) {
+                if(err) throw err;
+            });
+        }
+
+        res.redirect('../../teacher/assessments?sc=tf');
+    });
+
+});
+
+router.get('/allsubmissions/:id', function (req, res) {
+    assessmentid = req.params.id;
+    connection.query(sqlgetLongUserIds, assessmentid, function (err, result) {
+        if(err) throw err;
+        res.render('teacher/viewsubmissions', {result: result});
+    });
+
+});
+
+
+
+router.get('/studentanswers/:id/:assid', function (req, res) {
+    assessmentid = req.params.assid;
+    userid = req.params.id;
+    connection.query(sqlgetUserLongAssignment, [userid, assessmentid], function (err, result) {
+        if(err) throw err;
+        res.render('teacher/studentsubmission', {result: result});
+    });
+
+});
+
+router.post('/addresult', function(req, res) {
+   // console.log(req.body);
+    var total = 0;
+    var assessmentid =0;
+    var userid = 0;
+    for (var i = 0;i<req.body.assessmentid.length;i++)
+    {
+
+        var marks = parseInt(req.body.marks[i]);
+        assessmentid = req.body.assessmentid[i];
+        userid = req.body.userid[i];
+        total = parseInt(total) + marks;
+
+
+    }
+
+    connection.query(sqlInsertResults, [assessmentid,userid, total], function (err, result) {
+            if(err) throw err;
+        });
+    res.redirect('../teacher/allsubmissions/'+assessmentid);
+
+});
 
 /* this is to route this file to router so it can take it to app.js */
 module.exports = router;
