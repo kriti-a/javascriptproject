@@ -70,17 +70,20 @@ var sqlgettfquestions = "SELECT a.name as 'Name',\n" +
     "inner join assessment a  on\n" +
     "a.assessmentID = tfaq.assessmentID  where  tfaq.assessmentID = ?";
 
+var sqlgetallclasses = "select class.name as name, uclass.classid as classid, (select concat(firstname,' ', lastname) from users where userid = class.createdBy) as createdby from user_class uclass inner join classes class on class.classID = uclass.classId where userid = ?";
+
 router.get('/results', function (req, res) {
+    var accessType = res.req.user.accessType;
     var userid = req.session.passport.user.user_id;
     connection.query(sqlgetresults, userid, function (err, result) {
         if(err) throw err;
-        res.render('student/results', {result: result})
+        res.render('student/results', {result: result, accessType : accessType})
     });
 });
 
 
 router.get('/assessments', function (req, res) {
-    console.log(req.session.passport.user.user_id);
+    var accessType = res.req.user.accessType;
     var userid = req.session.passport.user.user_id;
     connection.query(sqlgetalltests, userid, function (err, result) {
         if(err) throw err;
@@ -88,17 +91,17 @@ router.get('/assessments', function (req, res) {
         //if the parameter shouts success
         if (a=='sc')
         {
-            res.render('student/alltests', {result: result, message:'success'})
+            res.render('student/alltests', {result: result, message:'success', accessType : accessType})
         }
         //if the parameter says failure
         else if (a=='fl')
         {
-            res.render('student/alltests', {result: result, message : 'error'})
+            res.render('student/alltests', {result: result, message : 'error', accessType : accessType})
         }
         //if there is no parameter
         else if (a==null)
         {
-            res.render('student/alltests', {result: result})
+            res.render('student/alltests', {result: result, accessType : accessType})
         }
 
     });
@@ -107,8 +110,8 @@ router.get('/assessments', function (req, res) {
 
 
 router.get('/givetest/:id', function (req, res) {
+    var accessType = res.req.user.accessType;
     assessmentid = req.params.id;
-    console.log(req.session.passport.user.user_id);
     var userid = req.session.passport.user.user_id;
     connection.query(selectifalreadysubmitted, [userid, assessmentid], function (err, result) {
         if(err) throw err;
@@ -125,7 +128,7 @@ router.get('/givetest/:id', function (req, res) {
                               if (err) throw err;
                               var assname = result[0].Name;
                               result = shuffle(result);
-                              res.render('student/longtest', {result: result, assname: assname})
+                              res.render('student/longtest', {result: result, assname: assname, accessType : accessType})
                           });
                       }
                       else if (parseInt(result[0].asstype) == 2) {
@@ -161,7 +164,7 @@ router.get('/givetest/:id', function (req, res) {
                               }
                               //    console.log(newresult);
                              // newresult = shuffle(newresult);
-                              res.render('student/mcqtest', {result: newresult, assname: assname})
+                              res.render('student/mcqtest', {result: newresult, assname: assname, accessType : accessType})
                           });
 
                       }
@@ -170,28 +173,37 @@ router.get('/givetest/:id', function (req, res) {
                               if (err) throw err;
                               var assname = result[0].Name;
                            //   result = shuffle(result);
-                              res.render('student/tftest', {result: result, assname: assname})
+                              res.render('student/tftest', {result: result, assname: assname, accessType : accessType})
                           });
                       }
                   });
               }
               else {
-                  res.render('student/deadlinepassed');
+                  res.render('student/deadlinepassed', {accessType : accessType});
               }
 
           });
         }
         else {
-            res.render('student/alreadysubmitted')
+            res.render('student/alreadysubmitted', {accessType : accessType})
         }
     });
 
 });
 
 
+router.get('/classes', function (req, res) {
+    var accessType = res.req.user.accessType;
+    var userid = req.session.passport.user.user_id;
+    connection.query(sqlgetallclasses, userid, function (err, result) {
+        if(err) throw err;
+        res.render('student/allclasses', {result: result, accessType : accessType})
+    });
+});
+
 //redirecting to the add new record page.
 router.post('/addanswer', function(req, res) {
-    console.log(req.session.passport.user.user_id);
+    var accessType = res.req.user.accessType;
     var userid = req.session.passport.user.user_id;
   for (var i = 0;i<req.body.answer.length;i++)
     {
@@ -207,7 +219,7 @@ router.post('/addanswer', function(req, res) {
 });
 
 router.post('/addtf', function(req, res) {
-    console.log(req.session.passport.user.user_id);
+    var accessType = res.req.user.accessType;
     var userid = req.session.passport.user.user_id;
     for (var i = 0;i<req.body.questionid.length;i++)
     {
@@ -223,7 +235,7 @@ router.post('/addtf', function(req, res) {
 });
 
 router.post('/addmcq', function(req, res) {
-    console.log(req.session.passport.user.user_id);
+    var accessType = res.req.user.accessType;
     var userid = req.session.passport.user.user_id;
     console.log(req.body);
     for (var i = 0;i<req.body.questionid.length;i++)

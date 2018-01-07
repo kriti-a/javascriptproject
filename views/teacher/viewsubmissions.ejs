@@ -64,10 +64,14 @@
                             <td style="border:none;padding: 15px;"></td>
                             <td style="border:none;padding: 15px;text-align: center"><% if(result.results.toString() == 'Added'){ %>
 
-                                    <a class="btn btn-success btn-sm"  style="background-color:#868e96;border-color: #868e96" onclick="return false;" >View Submissions</a>
+                                <button disabled type="button" class="btn btn-success btn-sm">
+                                    <span class="fa fa-pencil fa-fw"></span>
+                                </button>
                                 <% } else{ %>
+                                <button onclick="document.location='../studentanswers/<%= result.userID %>/<%= result.assessmentID %>'" type="button" class="btn btn-success btn-sm">
+                                    <span class="fa fa-pencil fa-fw"><a href=""> </a></span>
+                                </button>
 
-                                    <a class="btn btn-success btn-sm" href="../studentanswers/<%= result.userID %>/<%= result.assessmentID %>">View Submissions</a>
                                 <% } %> </td>
 
                         </tr>

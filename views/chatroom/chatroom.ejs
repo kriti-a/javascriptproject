@@ -1,44 +1,73 @@
-<!DOCTYPE html>
+<% include ../header.ejs %>
 <html>
 <head>
     <title>Chat</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/morris.css" rel="stylesheet">
+    <link href="../css/font-awesome.css" rel="stylesheet">
+    <!-- scripts -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/metisMenu.min.js"></script>
+    <script src="../js/raphael.min.js"></script>
+    <script src="../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
     <style>
-        body{margin-top: 30px}
-        #messageArea{display: block}
-    </style>
 
+        #messageArea{display: block; margin-top:30px}
+    </style>
+    <script>
+
+        function goback() {
+            window.location.href = "../student/classes";
+        }
+    </script>
 
 </head>
 <body>
-<div class="container">
 
-    <div id="messageArea" class="row">
-        <div class="col-md-4" >
-            <div class="well">
-                <h3>Online Users</h3>
-                <ul class="list-group" id="users"></ul>
-            </div>
-        </div>
-        <div class="col-md-8" >
-            <div class="chat" id="chat"></div>
-            <form id="messageForm">
-                <div class="form-group" >
-                    <label>Enter Message</label>
-                    <textarea id="message" class="form-control"></textarea>
-                    <br/>
-                    <input type="submit" class="btn btn-success" value="Send Message"/>
+<div id="wrapper">
+    <% include ../side_menu.ejs %>
+
+    <div id="page-wrapper">
+
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-11">
+
+
+                        <div id="messageArea" class="row">
+
+                            <div class="col-md-8" >
+                                <div class="chat" id="chat"></div>
+                                <form id="messageForm">
+                                    <div class="form-group" >
+                                        <label>Enter Message</label>
+                                        <textarea id="message" class="form-control"></textarea>
+                                        <br/>
+                                        <input type="submit" class="btn btn-success btn-sm" value="Send Message"/>
+                                        <button type="button" onclick="goback()" class="btn btn-danger btn-sm">Exit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-4" >
+                                <div class="well">
+                                    <h3>Online Users</h3>
+                                    <ul class="list-group" id="users"></ul>
+                                </div>
+                            </div>
+                        </div>
+
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
 <script>
 
     $(function () {

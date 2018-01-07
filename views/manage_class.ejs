@@ -53,7 +53,6 @@
     $(document).ready(function () {
         var dataSet = <%= studentsInfo %>;
         for(var i=0; i<dataSet.length; i++) {
-        console.info($("#"+dataSet[i]));
         $("#"+dataSet[i]).attr("disabled", "disabled");
          }
     });

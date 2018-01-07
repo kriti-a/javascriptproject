@@ -101,11 +101,11 @@
         }, 200);
 
         // Default first accordion open
-		
+
         $('.panel-group .panel:first').find('.panel-collapse').addClass('in');
 
         // For each tab accordion open and close on click
-		
+
         $(".panel-heading").on("click", function () {
             $(".collapse:visible").slideUp();
             if(!$(this).next().is(":visible")){

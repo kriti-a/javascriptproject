@@ -24,7 +24,9 @@ var users = require('./routes/users');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+
 //app.use(bodyParser());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -74,6 +76,7 @@ app.use('/users', users);
 
 /*----------------- No need to make any changes to this part unless any dependency is needed to be added -----------*/
 app.set('views', path.join(__dirname, 'views'));
+
 
 
 //routing to student dashboard added
@@ -153,17 +156,16 @@ var room = "";
 var groupid;
 
 app.get('/chat/:id', function(req, res) {
+    var accessType = res.req.user.accessType;
     groupid = req.params.id;
     userid = req.session.passport.user.user_id;
-    console.log('here'+ req.session.passport.user.user_id);
-    console.log('userid: ' + req.session.passport.user.user_id);
     connection.query(sqlgetemail, userid, function (err, result) {
-        console.log('userid: ' + userid);
+
         if (err) throw err;
         else
         {
             name = result[0].email;
-            res.render('chatroom/chatroom');
+            res.render('chatroom/chatroom', {accessType : accessType});
         }
     });
 
@@ -174,9 +176,7 @@ app.get('/chat/:id', function(req, res) {
 io.on('connection', function (socket) {
     connections.push(socket);
     socket.username = name;
-    //console.log(socket.username);
-    console.log('from chat: ' + userid);
-    room = groupid;
+   room = groupid;
     socket.room = room;
     socket.join(room);
     users.push(socket.username);
@@ -206,6 +206,12 @@ io.on('connection', function (socket) {
         io.sockets.emit('get users', users);
     }
 });
+
+
+
+// ----------------------------------------- Chat ends here --------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------
+
 
 server.listen(process.env.PORT || 3000);
 console.log("Server is running ... ");
