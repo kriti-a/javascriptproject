@@ -61,7 +61,7 @@ router.get('/', function(req, res){
 
         if(subject.length <= 0){
             var accessType = res.req.user.accessType;
-            res.render('teacher_dashboard',{message:'empty',message2:'empty',accessType  : access_id });
+            res.render('teacher_dashboard',{message:'empty',message2:'empty',accessID  : access_id });
 
         } else {
 
@@ -84,12 +84,12 @@ router.get('/', function(req, res){
 
 
 
-                                    res.render('teacher_dashboard',{subject:subject,totalAssess:totalAssess,announcedRes:announcedRes,pendingResult:pendingResult, pass:pass, fail:fail,message:'available',message2:'empty',accessType  : access_id })
+                                    res.render('teacher_dashboard',{subject:subject,totalAssess:totalAssess,announcedRes:announcedRes,pendingResult:pendingResult, pass:pass, fail:fail,message:'available',message2:'empty',accessID  : access_id })
 
                                 }else{
 
 
-                                res.render('teacher_dashboard',{subject:subject,totalAssess:totalAssess,announcedRes:announcedRes,pendingResult:pendingResult, pass:pass, fail:fail,message:'available',message2:'available',accessType  : access_id })
+                                res.render('teacher_dashboard',{subject:subject,totalAssess:totalAssess,announcedRes:announcedRes,pendingResult:pendingResult, pass:pass, fail:fail,message:'available',message2:'available',accessID  : access_id })
 
                                 }}); // else closing
                         });
