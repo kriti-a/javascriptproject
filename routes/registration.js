@@ -55,7 +55,7 @@ router.post('/login',
         else{
 
 
-            connection.query('select * from users inner join user_access on user_access.userID = users.userID where users.userID=' +res.req.user.user_id,
+            connection.query('select * from user_access where users.userID=' +res.req.user.user_id,
                 function (err, userAcessInfo) {
                     if (err){
                         console.log("if err");
@@ -63,11 +63,10 @@ router.post('/login',
                     }
 
                     for (var i in userAcessInfo) {
-                        var accessID = userAcessInfo[i].accessID;
-                        res.req.user.accessID = accessID;
+                        var accessIDinfo = userAcessInfo[i].accessID;
+                        res.req.user.accessID = accessIDinfo;
                     }
-                    console.log(accessID)
-                    if(accessID === 1){
+                    if(accessIDinfo === 1){
                         res.redirect('/teacher_d');
                     } else {
                         res.redirect('/student_dashboard');
@@ -157,11 +156,14 @@ router.post('/registration', function(req, res) {
 
                         req.login(userID, function(err) {
                             connection.query("INSERT INTO user_access (userID, accessID) SELECT LAST_INSERT_ID(), '1' FROM users")
+                            //connection.query()
+                            res.req.user.accessID = '1';
                             res.redirect('/teacher_d');// Redirect to teachers dashboard
                         });
                     } else {
                         req.login(userID, function(err) {
                             connection.query("INSERT INTO user_access (userID, accessID) SELECT LAST_INSERT_ID(), '2' FROM users")
+                            res.req.user.accessID = '2';
                             res.redirect('/student_dashboard');// Redirect to student dashboard
                         });
                     }
