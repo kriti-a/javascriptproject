@@ -64,7 +64,7 @@ router.post('/login',
 
                     for (var i in userAcessInfo) {
                         var accessID = userAcessInfo[i].accessID;
-
+                        res.req.user.accessID = accessID;
                     }
                     console.log(accessID)
                     if(accessID === 1){
