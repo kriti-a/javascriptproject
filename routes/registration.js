@@ -55,7 +55,7 @@ router.post('/login',
         else{
 
 
-            connection.query('select * from user_access where users.userID=' +res.req.user.user_id,
+            connection.query('select * from users inner join user_access on user_access.userID = users.userID where users.userID=' +res.req.user.user_id,
                 function (err, userAcessInfo) {
                     if (err){
                         console.log("if err");
@@ -65,7 +65,6 @@ router.post('/login',
                     for (var i in userAcessInfo) {
                         var accessIDinfo = userAcessInfo[i].accessID;
                         res.req.user.accessID = accessIDinfo;
-
                     }
                     if(accessIDinfo === 1){
                         res.redirect('/teacher_d');
@@ -157,7 +156,6 @@ router.post('/registration', function(req, res) {
 
                         req.login(userID, function(err) {
                             connection.query("INSERT INTO user_access (userID, accessID) SELECT LAST_INSERT_ID(), '1' FROM users")
-                            //connection.query()
                             res.req.user.accessID = '1';
                             res.redirect('/teacher_d');// Redirect to teachers dashboard
                         });
