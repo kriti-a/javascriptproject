@@ -34,9 +34,11 @@ router.get('/getClassesName', function(req, res){
 
     var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + loggedInTeacher; //To get all the classes taught by a teacher
 
+    var accessType = res.req.user.accessType;
+
     connection.query(sqlGetTeacherClasses, function (err, result, fields) {
         if(err) throw err;
-        res.json(result);
+        res.render('viewClassess', {result: result, accessType : accessType});
     });
 });
 
@@ -98,8 +100,10 @@ router.get('/getTestsName/:id', function(req, res){
 
 router.post('/addTest/:id', function (req, res) {
 
+    console.log(Date.parse(req.body.deadline));
+
     //console.log("kfnwjefnwejf: "+ req.body.deadline.split(" ")[0]);
-    var sqlInsertClassTest = "INSERT INTO assessment (name, deadline, totalMarks, passingMarks, assessmentType) VALUES ('" + req.body.name + "', '2018-01-04', " + req.body.totalMarks + ", " + req.body.passingMarks + ", '" + req.body.assessmentType + "')";
+   /* var sqlInsertClassTest = "INSERT INTO assessment (name, deadline, totalMarks, passingMarks, assessmentType) VALUES ('" + req.body.name + "', '2018-01-04', " + req.body.totalMarks + ", " + req.body.passingMarks + ", '" + req.body.assessmentType + "')";
 
     connection.query(sqlInsertClassTest, function (err, result, fields) {
        if(err) throw err;
@@ -119,7 +123,7 @@ router.post('/addTest/:id', function (req, res) {
     connection.query(sqlInsertClassTest1, function (err, result, fields) {
        if(err) throw err;
        res.json("Test was successfully added!");
-    });
+    });*/
 
 });
 
