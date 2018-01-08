@@ -23,8 +23,8 @@ router.get('/student_dashboard', function(req, res) {
                             if (err) throw err;
                             var classAssessmentJson = JSON.stringify(classAssessment);
                             var jsonData = classAssessmentJson.replace(/\"([^(\")"]+)\":/g, "$1:");
-                            var accessType = res.req.user.accessType;
-                            res.render('student_dashboard', {classesInfo: result, classassesmentInfo: jsonData, notificationInfo: notification, moment: moment,accessType : accessType});
+                            var accessID = res.req.user.accessID;
+                            res.render('student_dashboard', {classesInfo: result, classassesmentInfo: jsonData, notificationInfo: notification, moment: moment,accessID : accessID});
                         });
                 });
 
