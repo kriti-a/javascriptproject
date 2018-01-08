@@ -73,7 +73,6 @@ background-color: white;
     font-size: 25px;
     margin-right: 25px;
     color: #2e6da4;
-
 }
 
 .fa {
@@ -121,14 +120,14 @@ background-color: white;
 
 .bar-5 {
     width: 40%;
-    height: 18px;
+    height: 22px;
     background-color: #d0e9c6;
     display: inline-block;
 }
 
 .bar-4 {
     width: 40%;
-    height: 18px;
+    height: 22px;
     background-color:#e4b9b9;
     display: inline-block;
 }

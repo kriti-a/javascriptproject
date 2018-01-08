@@ -65,6 +65,7 @@ router.post('/login',
                     for (var i in userAcessInfo) {
                         var accessIDinfo = userAcessInfo[i].accessID;
                         res.req.user.accessID = accessIDinfo;
+
                     }
                     if(accessIDinfo === 1){
                         res.redirect('/teacher_d');

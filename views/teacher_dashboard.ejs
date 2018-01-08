@@ -34,98 +34,106 @@
 
 <div id="wrapper">
 
+    <!--including side menu -->
     <% include side_menu.ejs %>
 
     <div id="page-wrapper">
+
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Teacher Dashboard</h1>
             </div>
         </div>
-        <div class="subHeadings"><p style="font-size: 30px; margin-left: 10px;">Subjects you are incharge of </p></div>
+
+        <div class="subHeadings">
+            <p style="font-size: 30px; margin-left: 10px;">Classes you are incharge of </p>
+        </div>
+
+        <!--checking if the logged in user has any classes assigned -->
         <% var status = message.toString();
         if(status == 'empty'){%>
 
         <div class="cardContainer">
-
             <div class="noRows">
                 <i class="fa fa-file" style="font-size:60px;color:lightblue; margin-top: 50px;"></i>
                 <p style="font-size:20px;color:lightblue;"> No assessment created yet</p>
-
             </div>
-
-
         </div>
 
         <%}else if(status == 'available'){subject.forEach(function (subject) {  %>
+
+        <!--creating cards displaying assessment details-->
         <div class="tcard">
             <div class="tcontainer">
                 <h4><b><%= subject.name %></b></h4>
                 <hr style="border:1px solid #f1f1f1"/>
 
                 <%totalAssess.forEach(function(totalAssess){%>
-                <%if(totalAssess.classID == subject.classID){%>
-                <p >Total Tests:<%=totalAssess.id%> </p>
-                <%}})%>
+                    <%if(totalAssess.classID == subject.classID){%>
+                         <p >Total Tests:<%=totalAssess.id%> </p>
+                 <%}})%>
                 <%announcedRes.forEach(function (announcedRes) { %>
-                <%if (announcedRes.classID == subject.classID){%>
-                <p>Results announced:<%= announcedRes.total%></p>
+                     <%if (announcedRes.classID == subject.classID){%>
+                        <p>Results announced:<%= announcedRes.total%></p>
                 <%}})%>
                 <%pendingResult.forEach(function (pendingResult) { %>
                 <%if(pendingResult.classID == subject.classID){%>
-                <p>Pending assessments:<%= pendingResult.pending%></p>
-                <%}})%>
+                        <p> <a href="teacher/assessments" style="color: #f7f7f7;">Pending assessments:<%= pendingResult.pending%></a></p>
+                <%}})%>  <!--end of asessment statistics -->
+
             </div>
         </div>
         <%})}%>
+        <!--creating data representation for results statistics-->
         <div  class="resultGraph">
             <div class="subHeadings"><p style="font-size: 30px;margin-left: 10px;"> Assessment Result Statistics</p></div>
-            <div style="margin-top: 30px;">
-                <% var res = message2.toString();
-                var sub = message.toString();
+                <div style="margin-top: 30px;">
+                    <% var res = message2.toString();
+                    var sub = message.toString();
 
+                    if(sub == 'empty' || res == 'empty'){%>
 
-                if(sub == 'empty' || res == 'empty'){%>
+                        <div class="cardContainer">
 
-                <div class="cardContainer">
+                            <div class="noRows">
+                                <i class="fa fa-file" style="font-size:60px;color:lightblue; margin-top: 50px;"></i>
+                                <p style="font-size:20px;color:lightblue;"> No Results to Display</p>
+                            </div>
 
-                    <div class="noRows">
-                        <i class="fa fa-file" style="font-size:60px;color:lightblue; margin-top: 50px;"></i>
-                        <p style="font-size:20px;color:lightblue;"> No Results to Display</p>
+                         </div>
 
-                    </div>
+                     <% }else if(sub == 'available' && res == 'available'){ subject.forEach(function (subject) {  %>
 
-                </div>
-
-                <% }else if(sub == 'available' && res == 'available'){ subject.forEach(function (subject) {  %>
                 <span class="heading" ><%=subject.name%></span>
+
                 <hr style="border:3px solid #f1f1f1">
+
                 <%pass.forEach(function (pass) { %>
-                <%fail.forEach(function (fail) { %>
-                    <%if(fail.aID == pass.aID && ( fail.cID == subject.classID || pass.cID == subject.classID)){%>
-                <div class="row">
-                    <div class="side">
-                        <div>Name : <%=pass.aName%></div>
-                    </div>
-                    <div class="middle">
-                        <div class="bar-container">
-                            <div class="bar-5" title="Max Marks: <%=pass.TotalMarks%>">Passed : <%=pass.passed%></div>
-                            <div class="bar-4" title="Min Marks: <%=fail.passMarks%>">Failed : <%=fail.failed%> </div>
-                        </div>
-                    </div>
-                    <div class="side right">
-                        <div>Highest Score :<%=pass.maximumScore%>  Lowest Score :<%=fail.minimumScore%> </div>
-                    </div>
-                </div>
-                <%}})})%>
+                    <%fail.forEach(function (fail) { %>
+                        <%if(fail.aID == pass.aID && ( fail.cID == subject.classID || pass.cID == subject.classID)){%>
+                             <div class="row">
+                                    <div class="side">
+                                         <div style="font-size: 16px;">Name : <%=pass.aName%></div>
+                                     </div>
+                                    <div class="middle">
+                                        <div class="bar-container">
+                                            <div class="bar-5" title="Max Marks: <%=pass.TotalMarks%>" style="font-size: 16px;">Passed : <%=pass.passed%></div>
+                                            <div class="bar-4" title="Min Marks: <%=fail.passMarks%>" style="font-size: 16px;">Failed : <%=fail.failed%> </div>
+                                        </div>
+                                    </div>
+                                    <div class="side right">
+                                            <div style="font-size: 16px;">Highest Score :<%=pass.maximumScore%>  Lowest Score :<%=fail.minimumScore%> </div>
+                                     </div>
+                             </div>
+                    <%}})})%>
+
                 <hr style="border:1px solid #f1f1f1">
-                <%})}%>
+
+                <%})}%> <!--end of result statistics -->
             </div>
-
-
         </div>
-    </div>
-</div>
+    </div> <!--end of page wrapper-->
+</div> <!--end of wrapper-->
 
 
 <!-- jQuery -->

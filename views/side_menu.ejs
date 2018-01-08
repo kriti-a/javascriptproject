@@ -1,7 +1,3 @@
-
-
-
-
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -32,7 +28,7 @@
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <!-- teacher dashboard -->
-            <% if(accessID == 1) { %>
+            <% if(accessType == 1) { console.log("from side menu  "+accessType); %>
             <ul class="nav" id="side-menu" id="teachersNav">
                 <li>
                     <a href="/teacher_d"><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
@@ -45,27 +41,20 @@
                 </li>
 
             </ul>
-        <% } else { %>
+            <% } else { console.log("from side menu  "+accessType); %>
+
+
             <!-- student dashboard -->
             <ul class="nav" id="side-menu" id="studentsNav">
                 <li>
                     <a href="/student_dashboard"><i class="fa fa-dashboard fa-fw"></i>Student's Dashboard</a>
                 </li>
-
-                <li class="dropdown" id = "student-class-section">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i>Class<span class="fa arrow"></span></a>
-                    <ul class="dropdown-menu"  role="menu">
-                        <li>
-                            <a href="../../student/classes"><i class="fa fa-th-list fa-fw"></i>View Classes</a>
-                        </li>
-                        <li>
-                            <a href="/manage_class"><i class="fa fa-table fa-fw"></i>Manage Class</a>
-                        </li>
-
-                    </ul>
-                    <!-- /.nav-second-level -->
+                <li id = "student-class-section">
+                    <a href="../../student/classes"><i class="fa fa-th-list fa-fw"></i>View Classes</a>
                 </li>
-
+                <li id = "student-class-section">
+                    <a href="/manage_class"><i class="fa fa-table fa-fw"></i>Manage Class</a>
+                </li>
                 <li>
                     <a href="../../student/assessments"><i class="fa fa-edit fa-fw"></i>View Assessments</a>
                 </li>
@@ -74,7 +63,6 @@
                 </li>
 
             </ul>
-            <% }  %>
         </div>
         <!-- /.sidebar-collapse -->
     </div>
