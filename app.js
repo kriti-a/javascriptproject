@@ -134,4 +134,4 @@ app.use(function(err, req, res, next) {
 server.listen(process.env.PORT || 3000);
 console.log("Server is running ... ");
 
-module.exports = app;
+//module.exports = app;

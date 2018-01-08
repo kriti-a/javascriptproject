@@ -51,9 +51,9 @@ router.post('/login',
             function (err, userAcessInfo) {
                 if (err) throw err;
                 for (var i in userAcessInfo) {
-                    var acessType = userAcessInfo[i].accessType;
+                    var acessType = userAcessInfo[i].accessID;
                 }
-                if(acessType === '1'){
+                if(acessType === 1){
                     res.redirect('/teacher_d');
                 } else {
                     res.redirect('/student_dashboard');
@@ -71,12 +71,9 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 },
     function(email, password, done){
-       console.log(email);
-       console.log(password);
         const db = "SELECT userID, password FROM users WHERE email = ?";
         connection.query(db, [email], function(err, results, fields) {
            if (err) {done(err)};
-
            if (results.length === 0) {
                 done(null, false);
             } else {
@@ -125,24 +122,40 @@ router.post('/registration', function(req, res) {
             const lastName = req.body.lastName;
             const email = req.body.email;
             const password = req.body.password;
-
+            var access_id;
             const insertuser = "INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
             const validuser = "SELECT LAST_INSERT_ID() as user_id";
+            var sqlinsertAccessUser = "INSERT INTO USER_ACCESS (USERID, ACCESSID) VALUES (?,?)";
+
 
             bcrypt.hash(password, saltRounds, function(err, hash) {
                 connection.query(insertuser, [firstName, lastName, email, hash], function (error, results, fields) {
                     if (error) throw error;
+                  var mm = email.split("@");
+                    if (mm[1].indexOf('student') !== -1)
+                        access_id = 2;
+                    else access_id=1;
 
                     connection.query(validuser, function(error, results, fields) {
                         if (error) throw error;
-
                         const user_id =results[0];
-                        console.log(results[0]);
-                        req.login(user_id, function(err) {
-                            res.redirect('/student_dashboard');
+                        var uid = results[0].user_id;
+                        connection.query(sqlinsertAccessUser,[uid, access_id], function(error, results, fields) {
+                            if (error) throw error;
+
+                            req.login(user_id, function(err) {
+
+                                if(access_id == 1)
+                                {
+                                    res.redirect('/teacher_d');
+                                }
+                                if(access_id == 2)
+                                {
+                                    res.redirect('/student_dashboard');
+                                }
+
+                            });
                         });
-
-
                         //res.render('stu_teach_dashboard', {title: "Success"});
                     });
 
