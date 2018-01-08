@@ -43,8 +43,8 @@ router.get('/', function(req, res){
         if(err) throw err;
 
         if(subject.length <= 0){
-
-            res.render('teacher_dashboard',{message:'empty',message2:'empty'});
+            var accessType = res.req.user.accessType;
+            res.render('teacher_dashboard',{message:'empty',message2:'empty',accessType : accessType});
 
         } else {
 
