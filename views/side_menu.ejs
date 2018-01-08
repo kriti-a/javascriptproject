@@ -32,10 +32,10 @@
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <!-- teacher dashboard -->
-            <% if(accessType == 1) { %>
+            <% if(accessID == 1) { %>
             <ul class="nav" id="side-menu" id="teachersNav">
                 <li>
-                    <a href=""><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
+                    <a href="/teacher_d"><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
                 </li>
                 <li>
                     <a href="/viewClasses"><i class="fa fa-bar-chart-o fa-fw"></i> Manage Class</a>
@@ -51,12 +51,21 @@
                 <li>
                     <a href="/student_dashboard"><i class="fa fa-dashboard fa-fw"></i>Student's Dashboard</a>
                 </li>
-                <li id = "student-class-section">
-                    <a href="../../student/classes"><i class="fa fa-th-list fa-fw"></i>View Classes</a>
+
+                <li class="dropdown" id = "student-class-section">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o fa-fw"></i>Class<span class="fa arrow"></span></a>
+                    <ul class="dropdown-menu"  role="menu">
+                        <li>
+                            <a href="../../student/classes"><i class="fa fa-th-list fa-fw"></i>View Classes</a>
+                        </li>
+                        <li>
+                            <a href="/manage_class"><i class="fa fa-table fa-fw"></i>Manage Class</a>
+                        </li>
+
+                    </ul>
+                    <!-- /.nav-second-level -->
                 </li>
-                <li id = "student-class-section">
-                    <a href="/manage_class"><i class="fa fa-table fa-fw"></i>Manage Class</a>
-                </li>
+
                 <li>
                     <a href="../../student/assessments"><i class="fa fa-edit fa-fw"></i>View Assessments</a>
                 </li>

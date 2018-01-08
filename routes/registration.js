@@ -47,14 +47,15 @@ router.get('/stu_teach_dashboard', authenticationMiddleware(), function(req, res
 
 router.post('/login',
     passport.authenticate('local'), function(req, res) {
-        connection.query('select * from users inner join user_access on user_access.userID = users.userID inner join access_level on access_level.accessID = user_access.accessID where users.userID=' +res.req.user.user_id,
+        connection.query('select * from user_access where userID=' +res.req.user.user_id,
             function (err, userAcessInfo) {
+            console.log(userAcessInfo);
                 if (err) throw err;
                 for (var i in userAcessInfo) {
-                    var acessType = userAcessInfo[i].accessType;
-                    res.req.user.accessType = acessType;
+                    var accessID = userAcessInfo[i].accessID;
+                    res.req.user.accessID = accessID;
                 }
-                if(acessType === '1'){
+                if(accessID == '1'){
                     res.redirect('/teacher_d');
                 } else {
                     res.redirect('/student_dashboard');
