@@ -87,11 +87,14 @@ app.use('/',manageClass);
 var teachers = require('./routes/teachers.js');
 var index = require('./routes/index.js');
 var teacher_dashboard = require('./routes/teacher_dashboard.js');
-var chats = require('./routes/chatroom');
+
+//var chats = require('./routes/chatroom');
+
 
 var viewClasses = require('./routes/viewClasses');
 var viewTests = require('./routes/viewTests');
 var questions = require('./routes/Questions');
+
 
 var students = require('./routes/student.js');
 
@@ -106,47 +109,97 @@ app.use('/teacher',teachers);
 app.use('/teacher_d',teacher_dashboard);
 
 // -----For the Chat
-app.use('/chat', chats);
+//app.use('/chat', chats);
 
 app.use('/viewClasses', viewClasses);
 app.use('/viewTests', viewTests);
 app.use('/questions', questions);
-
-//-----------------------------------------------------------------------------------
-/*
-app.use(function(req, res, next) {
-=======
-// ------- Student -----
-
-
 app.use('/student/', students);
-
 //-----------------------------------------------------------------------------------
-
-/*app.use(function(req, res, next) {
->>>>>>> aca334bbe9189724dc71d801c4c427c5b9d3cfe8
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-<<<<<<< HEAD
-});
-*/
 
 // ---- Do not remove this commented code -- Momal
 
+
+// ------------  Adding Chat here to resolve issues.
+// ----------------------------------------------------------------------------------------------
+
+
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : 'root',
+    database : 'ASSESS_EASY'
+});
+
+
+
+
+var users = [];
+var connections = [];
+var userid;
+var sqlgetemail = "select email from users where userid =?";
+var insertintodb = "INSERT INTO status (s_text, classid,userid ) VALUES (?,?,?)";
+var name = "";
+var room = "";
+var groupid;
+
+app.get('/chat/:id', function(req, res) {
+    var accessType = res.req.user.accessType;
+    groupid = req.params.id;
+    userid = req.session.passport.user.user_id;
+    connection.query(sqlgetemail, userid, function (err, result) {
+
+        if (err) throw err;
+        else
+        {
+            name = result[0].email;
+            res.render('chatroom/chatroom', {accessType : accessType});
+        }
+    });
+
+});
+
+
+
+io.on('connection', function (socket) {
+    connections.push(socket);
+    socket.username = name;
+   room = groupid;
+    socket.room = room;
+    socket.join(room);
+    users.push(socket.username);
+    updateUsernames();
+    socket.broadcast.to(socket.room).emit('updatechat',{ msg: socket.username + ' has joined the chat'});
+
+
+    //Disconnect
+    socket.on('disconnect', function (data) {
+        users.splice(users.indexOf(socket.username), 1);
+        updateUsernames();
+        connections.splice(connections.indexOf(socket, 1));
+       // console.log('Disconnected: %s sockets connected', connections.length);
+    });
+
+
+    //Send Message
+    socket.on('send message', function (data) {
+        //    add_message(data[0], data[1]);
+       // console.log(data)
+        // io.sockets.emit('new message', {msg: data, user:socket.username});
+        io.sockets.in(socket.room).emit('new message', {msg: data, user: socket.username});
+    });
+
+
+    function updateUsernames() {
+        io.sockets.emit('get users', users);
+    }
+});
+
+
+
+// ----------------------------------------- Chat ends here --------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------
+
+
 server.listen(process.env.PORT || 3000);
 console.log("Server is running ... ");
-
-module.exports = app;

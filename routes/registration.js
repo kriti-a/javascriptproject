@@ -52,6 +52,7 @@ router.post('/login',
                 if (err) throw err;
                 for (var i in userAcessInfo) {
                     var acessType = userAcessInfo[i].accessType;
+                    res.req.user.accessType = acessType;
                 }
                 if(acessType === '1'){
                     res.redirect('/teacher_d');

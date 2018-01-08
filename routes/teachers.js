@@ -2,7 +2,7 @@
 var express    = require('express'),
     mysql      = require('mysql'),
     bodyParser = require('body-parser');
-
+var passport = require('passport');
 var router = express.Router();
 
 //Set up data connection
@@ -12,8 +12,6 @@ var connection = mysql.createConnection({
     password : 'root',
     database : 'ASSESS_EASY'
 });
-
-var loggedInTeacher = 1; //This should be a dynamic value coming from the session. For testing purposes, a dummy value is used
 
 //---------------------------------------Start of Class functions-------------------------------------------------------
 
@@ -26,19 +24,18 @@ var sqlSelectTFAssessments = "SELECT ass.assessmentID, ass.Name, ass.passingMark
 var sqlgetmcqAssessmentResults = "select derived2.userid, derived2.assessmentid, coalesce( sum(derived.Obtained),0) as Obtained from (select mcq.correctOption, mcq.marks, sass.answer, sass.userid, sass.assessmentid, sass.questionID, CASE WHEN sass.answer = mcq.correctOption THEN mcq.marks ELSE 0 END as 'Obtained' from student_assessment sass inner join (SELECT distinct(userid) as userid FROM student_assessment where assessmentID = ?) bsass on bsass.userid = sass.userID inner join mc_questions mcq on mcq.mcqID = sass.questionID where sass.assessmentID = ? order by sass.questionID) derived  right join (SELECT userid, cass.assessmentid, 0 as Obtained from user_class uclass inner join  class_assessment cass on  uclass.classId = cass.classID where cass.assessmentid = ? ) derived2 on derived2.userid = derived.userid  group by derived2.userid";
 var sqlInsertResults = "INSERT INTO assessment_results (assessmentID,userID,obtainedmarks)VALUES(?,?,?)";
 var sqlgetTFAssessmentResults = "select derived2.userid, derived2.assessmentid, coalesce( sum(derived.Obtained),0) as Obtained from (select tfq.correctOption, tfq.marks, sass.answer, sass.userid, sass.assessmentid, sass.questionID, CASE WHEN sass.answer = tfq.correctOption THEN tfq.marks ELSE 0 END as 'Obtained' from student_assessment sass inner join (SELECT distinct(userid) as userid FROM student_assessment where assessmentID = ?) bsass on bsass.userid = sass.userID inner join tf_questions tfq on tfq.tfqID = sass.questionID where sass.assessmentID = ? order by sass.questionID) derived right join (SELECT userid, cass.assessmentid, 0 as Obtained from user_class uclass inner join  class_assessment cass on  uclass.classId = cass.classID where cass.assessmentid = ? ) derived2 on derived2.userid = derived.userid  group by derived2.userid";
-var sqlgetLongUserIds = "Select distinct concat(u.firstName, ' ',  u.lastName) as uName, coalesce(assr.obtainedMarks, 0) as 'Obtained',  CASE WHEN coalesce(assr.obtainedMarks, 0) != 0 THEN 'Added' ELSE 'Not Added' END as 'results', u.userID, sass.assessmentID  from users u  inner join  student_assessment  sass  on u.userID = sass.userID left join assessment_results assr on assr.assessmentID = sass.assessmentID and u.userID = assr.userID where sass.assessmentID = ? group by uName";
+var sqlgetLongUserIds = "Select distinct concat(u.firstName, ' ',  u.lastName) as uName, coalesce(assr.obtainedMarks, 0) as 'Obtained',  CASE  WHEN coalesce(assr.obtainedMarks, 0) != 0 THEN 'Added'  ELSE 'Not Added' END as 'results', u.userID,  sass.assessmentID  , CASE WHEN ass.deadline < NOW() then 'Finished' ELSE  'Open' END as deadline from users u   inner join  student_assessment  sass on u.userID = sass.userID  left join  assessment_results assr on assr.assessmentID = sass.assessmentID and u.userID = assr.userID inner join assessment ass on sass.assessmentID = ass.assessmentID where sass.assessmentID = ?  group by u.userid";
 var sqlgetUserLongAssignment = "SELECT sass.userID as userID, loq.lqText as Text,loq.marks as Marks, sass.questionID as questionID, sass.assessmentID as assessmentID, sass.answer as answer FROM student_assessment sass inner join long_questions loq on loq.lqID = sass.questionID WHERE userID = ? AND assessmentID = ?";
+var sqlgetResultCount = "select count(*) as c from assessment_results where assessmentid = ?";
 //----------------------------------------------------
 
 router.get('/getClassesName', function(req, res){
 
-    var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + loggedInTeacher; //To get all the classes taught by a teacher
-
-    var accessType = res.req.user.accessType;
+    var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + res.req.user.user_id; //To get all the classes taught by a teacher
 
     connection.query(sqlGetTeacherClasses, function (err, result, fields) {
         if(err) throw err;
-        res.render('viewClassess', {result: result, accessType : accessType});
+        res.json(result);
     });
 });
 
@@ -46,7 +43,7 @@ router.get('/getClassesName', function(req, res){
 
 router.post('/addClass', function (req, res) {
 
-    var sqlInsertClass = "INSERT INTO classes (name, createdOn, createdBy) values('" + req.body.name + "', now(), " + loggedInTeacher + ")";
+    var sqlInsertClass = "INSERT INTO classes (name, createdOn, createdBy) values('" + req.body.name + "', now(), " + res.req.user.user_id + ")";
 
     connection.query(sqlInsertClass, function (err, result, fields) {
        if(err) throw err;
@@ -87,7 +84,7 @@ router.post('/deleteClass', function (req, res) {
 
 router.get('/getTestsName/:id', function(req, res){
 
-   var sqlGetClassTests = "SELECT * FROM assessment where assessment.assessmentID IN (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = "+ req.params.id +")"; //To get all the tests belonging to one class
+   var sqlGetClassTests = "SELECT * FROM assessment where assessment.assessmentID IN (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = " + req.params.id +")"; //To get all the tests belonging to one class
 
     connection.query(sqlGetClassTests, function (err, result, fields) {
         if(err) throw err;
@@ -100,10 +97,17 @@ router.get('/getTestsName/:id', function(req, res){
 
 router.post('/addTest/:id', function (req, res) {
 
-    console.log(Date.parse(req.body.deadline));
+    var d = new Date(req.body.deadline),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
 
-    //console.log("kfnwjefnwejf: "+ req.body.deadline.split(" ")[0]);
-   /* var sqlInsertClassTest = "INSERT INTO assessment (name, deadline, totalMarks, passingMarks, assessmentType) VALUES ('" + req.body.name + "', '2018-01-04', " + req.body.totalMarks + ", " + req.body.passingMarks + ", '" + req.body.assessmentType + "')";
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    //console.log(year+"-"+month+"-"+day);
+
+    var sqlInsertClassTest = "INSERT INTO assessment (name, deadline, totalMarks, passingMarks, assessmentType) VALUES ('" + req.body.name + "', '" + year + "-" + month + "-" + day + "', " + req.body.totalMarks + ", " + req.body.passingMarks + ", '" + req.body.assessmentType + "')";
 
     connection.query(sqlInsertClassTest, function (err, result, fields) {
        if(err) throw err;
@@ -111,7 +115,7 @@ router.post('/addTest/:id', function (req, res) {
     });
 
     //Adding into notification table for Kriti
-    var sqlInsertNotification = "INSERT INTO notification (message, type, createdon) VALUES (CONCAT((SELECT name FROM classes WHERE classID = " + req.params.id + "), ' test added'), '" + req.body.assessmentType + "', now())";
+    var sqlInsertNotification = "INSERT INTO notification (message, type, createdon) VALUES (CONCAT((SELECT name FROM classes WHERE classID = " + req.params.id + "), ' test added'), 'test', now())";
 
     connection.query(sqlInsertNotification, function (err, result, fields) {
        if(err) throw err;
@@ -123,7 +127,7 @@ router.post('/addTest/:id', function (req, res) {
     connection.query(sqlInsertClassTest1, function (err, result, fields) {
        if(err) throw err;
        res.json("Test was successfully added!");
-    });*/
+    });
 
 });
 
@@ -131,7 +135,15 @@ router.post('/addTest/:id', function (req, res) {
 
 router.post('/updateTest', function (req, res) {
 
-    var sqlUpdateTest = "UPDATE assessment SET name = '" + req.body.name + "', deadline = '" + req.body.deadline + "', totalMarks = " + req.body.totalMarks + ", passingMarks = " + req.body.passingMarks + " WHERE assessmentID = " + req.body.assessmentID;
+    var d = new Date(req.body.deadline),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    var sqlUpdateTest = "UPDATE assessment SET name = '" + req.body.name + "', deadline = '" + year + "-" + month + "-" + day + "', totalMarks = " + req.body.totalMarks + ", passingMarks = " + req.body.passingMarks + " WHERE assessmentID = " + req.body.assessmentID;
 
     connection.query(sqlUpdateTest, function (err, result, fields) {
        if(err) throw err;
@@ -361,62 +373,110 @@ router.post('/deleteLongQuestion', function (req, res) {
 * */
 
 router.get('/assessments', function (req, res) {
-    connection.query(sqlSelectLongQAssessments, 2, function (err, resultL) {
+    var accessType = res.req.user.accessType;
+    var loggedin = req.session.passport.user.user_id;
+var message;
+    var a = req.query.lg;
+    //if the parameter shouts success
+    if (a=='sc')
+    {
+        message = 'success';
+    }
+    else if (a=='fl')
+    {
+        message = 'failure';
+    }
+    else if (a==null)
+    {
+        message = '';
+    }
+    else if (a=='dr')
+    {
+        message = 'deadliner';
+    }
+    else if (a=='ad')
+    {
+        message = 'alreadyd';
+    }
+     connection.query(sqlSelectLongQAssessments, loggedin, function (err, resultL) {
         if(err) throw err;
-        connection.query(sqlSelectMCQAssessments, 2, function (err, resultM) {
+        connection.query(sqlSelectMCQAssessments, loggedin, function (err, resultM) {
             if(err) throw err;
-            connection.query(sqlSelectTFAssessments, 2, function (err, resultTF) {
+            connection.query(sqlSelectTFAssessments, loggedin, function (err, resultTF) {
                 if(err) throw err;
-                res.render('teacher/alltests', {resultL: resultL, resultM: resultM, resultTF: resultTF});
+                res.render('teacher/alltests', {resultL: resultL, resultM: resultM, resultTF: resultTF, accessType : accessType, message:message});
             });
         });
     });
 });
 
 router.get('/submitMCQ/:id', function (req, res) {
+    var accessType = res.req.user.accessType;
     assessmentid = req.params.id;
-    connection.query(sqlgetmcqAssessmentResults, [assessmentid,assessmentid,assessmentid], function (err, result, fields) {
+    connection.query(sqlgetResultCount, assessmentid, function (err, result) {
         if(err) throw err;
-        for (var i=0;i<result.length;i++)
-        {
-            var userid = result[i].userid;
-            var obtained = result[i].Obtained;
-            console.log(userid, obtained);
-            connection.query(sqlInsertResults, [assessmentid,userid, obtained], function (err, result) {
-                if(err) throw err;
-            });
-        }
+     if (result[0].c > 0)
+     {
+         res.redirect('../../teacher/assessments?lg=ad');
+     }
+     else {
+         connection.query(sqlgetmcqAssessmentResults, [assessmentid, assessmentid, assessmentid], function (err, result, fields) {
+             if (err) throw err;
+             for (var i = 0; i < result.length; i++) {
+                 var userid = result[i].userid;
+                 var obtained = result[i].Obtained;
+                 connection.query(sqlInsertResults, [assessmentid, userid, obtained], function (err, result) {
+                     if (err) throw err;
+                 });
+             }
+             res.redirect('../../teacher/assessments?lg=sc');
+         });
+     }
 
-        res.redirect('../../teacher/assessments?sc=sc');
     });
-
 });
 
 
 router.get('/submitTF/:id', function (req, res) {
+    var accessType = res.req.user.accessType;
     assessmentid = req.params.id;
-    connection.query(sqlgetTFAssessmentResults, [assessmentid,assessmentid,assessmentid], function (err, result, fields) {
+    connection.query(sqlgetResultCount, assessmentid, function (err, result) {
         if(err) throw err;
-        for (var i=0;i<result.length;i++)
+        if (result[0].c > 0)
         {
-            var userid = result[i].userid;
-            var obtained = result[i].Obtained;
-            console.log(userid, obtained);
-            connection.query(sqlInsertResults, [assessmentid,userid, obtained], function (err, result) {
-                if(err) throw err;
+            res.redirect('../../teacher/assessments?lg=ad');
+        }
+        else {
+            connection.query(sqlgetTFAssessmentResults, [assessmentid, assessmentid, assessmentid], function (err, result, fields) {
+                if (err) throw err;
+                for (var i = 0; i < result.length; i++) {
+                    var userid = result[i].userid;
+                    var obtained = result[i].Obtained;
+                    connection.query(sqlInsertResults, [assessmentid, userid, obtained], function (err, result) {
+                        if (err) throw err;
+                    });
+                }
+
+                res.redirect('../../teacher/assessments?lg=sc');
             });
         }
-
-        res.redirect('../../teacher/assessments?sc=tf');
     });
 
 });
 
 router.get('/allsubmissions/:id', function (req, res) {
+    var accessType = res.req.user.accessType;
     assessmentid = req.params.id;
     connection.query(sqlgetLongUserIds, assessmentid, function (err, result) {
         if(err) throw err;
-        res.render('teacher/viewsubmissions', {result: result});
+
+        if (result[0].deadline == 'Finished')
+        {
+            res.render('teacher/viewsubmissions', {result: result, accessType : accessType});
+        }
+        else {
+            res.redirect('../../teacher/assessments?lg=dr');
+        }
     });
 
 });
@@ -424,11 +484,12 @@ router.get('/allsubmissions/:id', function (req, res) {
 
 
 router.get('/studentanswers/:id/:assid', function (req, res) {
+    var accessType = res.req.user.accessType;
     assessmentid = req.params.assid;
     userid = req.params.id;
     connection.query(sqlgetUserLongAssignment, [userid, assessmentid], function (err, result) {
         if(err) throw err;
-        res.render('teacher/studentsubmission', {result: result});
+        res.render('teacher/studentsubmission', {result: result, accessType : accessType});
     });
 
 });
