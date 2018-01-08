@@ -1,5 +1,10 @@
 <% include ../header.ejs %>
 <head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/metisMenu.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/morris.css" rel="stylesheet">
+    <link href="../../css/font-awesome.css" rel="stylesheet">
 
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
@@ -16,164 +21,212 @@
 
 </head>
 <body>
+<div id="wrapper">
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Assess Easy</a>
+    </div>
+    <!-- /.navbar-header -->
+
+    <ul class="nav navbar-top-links navbar-right">
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                </li>
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <!-- /.navbar-top-links -->
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <!-- teacher dashboard -->
+            <ul class="nav" id="side-menu" id="teachersNav">
+                <li>
+                    <a href=""><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
+                </li>
+                <li>
+                    <a href="/viewClasses"><i class="fa fa-bar-chart-o fa-fw"></i> Manage Class</a>
+                </li>
+                <li>
+                    <a href="../../teacher/assessments"><i class="fa fa-edit fa-fw"></i>Upload Results</a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
+</nav>
 
 <div id="jsGrid" style="margin-left: 250px;"></div>
+</div>
 
 <script>
     //<![CDATA[
-   // window.onload=function(){
-        $(function() {
+    // window.onload=function(){
+    $(function() {
 
-            var SolRiaDateTimeField = function (config) {
-                jsGrid.Field.call(this, config);
-            };
-            SolRiaDateTimeField.prototype = new jsGrid.Field({
-                sorter: function (date1, date2) {
-                    return new Date(date1) - new Date(date2);
-                },
 
-                itemTemplate: function (value) {
-                    if (value === null) {
-                        return '';
-                    } else {
-                        return moment(value).format('YYYY-MM-DD');
-                    }
-                },
+        var SolRiaDateTimeField = function (config) {
+            jsGrid.Field.call(this, config);
+        };
+        SolRiaDateTimeField.prototype = new jsGrid.Field({
+            sorter: function (date1, date2) {
+                return new Date(date1) - new Date(date2);
+            },
 
-                insertTemplate: function (value) {
-                    this._insertPicker = $('<input>').datetimepicker({
-                        format: 'YYYY-MM-DD',
-                        defaultDate: moment(),
-                        widgetPositioning: {
-                            horizontal: 'auto',
-                            vertical: 'bottom'
-                        }
-                    });
-
-                    this._insertPicker.data('DateTimePicker').date(moment());
-                    return this._insertPicker;
-                },
-
-                editTemplate: function (value) {
-                    this._editPicker = $('<input>').datetimepicker({
-                        format: 'YYYY-MM-DD',
-                        widgetPositioning: {
-                            horizontal: 'auto',
-                            vertical: 'bottom'
-                        }
-                    });
-
-                    if (value !== null) {
-                        this._editPicker.data('DateTimePicker').defaultDate(moment(value));
-                        this._editPicker.data('DateTimePicker').date(moment(value));
-                    }
-                    return this._editPicker;
-                },
-
-                insertValue: function () {
-                    var insertValue = this._insertPicker.data('DateTimePicker').date();
-                    if (typeof insertDate !== 'undefined' && insertDate !== null) {
-                        return insertDate.format('YYYY-MM-DD');
-                    } else {
-                        return null;
-                    }
-                },
-
-                editValue: function () {
-                    var editValue = this._editPicker.data('DateTimePicker').date();
-                    if (typeof editValue !== 'undefined' && editValue !== null) {
-                        return editValue.format('YYYY-MM-DD');
-                    } else {
-                        return null;
-                    }
+            itemTemplate: function (value) {
+                if (value === null) {
+                    return '';
+                } else {
+                    return moment(value).format('l');
                 }
-            });
-            jsGrid.fields.solRiaDateTimeField = SolRiaDateTimeField;
+            },
+
+            insertTemplate: function (value) {
+                this._insertPicker = $('<input type="text" name="deadline">').datetimepicker({
+                    format: 'l',
+                    defaultDate: moment(),
+                    widgetPositioning: {
+                        horizontal: 'auto',
+                        vertical: 'bottom'
+                    }
+                });
+
+                this._insertPicker.data('DateTimePicker').date(moment());
+                return this._insertPicker;
+            },
+
+            editTemplate: function (value) {
+                this._editPicker = $('<input type="text">').datetimepicker({
+                    format: 'l',
+                    widgetPositioning: {
+                        horizontal: 'auto',
+                        vertical: 'bottom'
+                    }
+                });
+
+                if (value !== null) {
+                    this._editPicker.data('DateTimePicker').defaultDate(moment(value));
+                    this._editPicker.data('DateTimePicker').date(moment(value));
+                }
+                return this._editPicker;
+            },
+
+            insertValue: function () {
+                var insertValue = this._insertPicker.data('DateTimePicker').date()._d;
+                var dateString = insertValue.toString();
+
+                return dateString;
+            },
+
+            editValue: function () {
+                var editValue = this._editPicker.data('DateTimePicker').date();
+                if (typeof editValue !== 'undefined' && editValue !== null) {
+                    return editValue.format('l');
+                } else {
+                    return null;
+                }
+            }
+        });
+        jsGrid.fields.solRiaDateTimeField = SolRiaDateTimeField;
 
 
-            $("#jsGrid").jsGrid({
-                height: "500px",
-                width: "82%",
-                editing: true,
-                autoload: true,
-                inserting: true,
-                paging: true,
-                sorting: true,
-                controller: {
+        $("#jsGrid").jsGrid({
+            height: "500px",
+            width: "82%",
+            editing: true,
+            autoload: true,
+            inserting: true,
+            paging: true,
+            sorting: true,
+            controller: {
 
-                    loadData: function (filter) {
-                        var data = $.Deferred();
-                        $.ajax({
-                            type: "GET",
-                            contentType: "application/json; charset=utf-8",
-                            url: "/teacher/getTestsName/"+<%= id %>,
-                            dataType: "json"
-                        }).done(function (response) {
-                            response = $.grep(response, function (item) {
-                                return (!filter.assessmentID || item.assessmentID.indexOf(filter.assessmentID) > -1)
-                                    && (!filter.name || item.name.indexOf(filter.name) > -1)
-                                    && (!filter.deadline || item.deadline.indexOf(filter.deadline) > -1)
-                                    && (!filter.totalMarks || item.totalMarks.indexOf(filter.totalMarks) > -1)
-                                    && (!filter.passingMarks || item.passingMarks.indexOf(filter.passingMarks) > -1)
-                                    && (!filter.assessmentType || item.assessmentType.indexOf(filter.assessmentType) > -1)
+                loadData: function (filter) {
+                    var data = $.Deferred();
+                    $.ajax({
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/teacher/getTestsName/"+<%= id %>,
+                        dataType: "json"
+                    }).done(function (response) {
+                        response = $.grep(response, function (item) {
+                            return (!filter.assessmentID || item.assessmentID.indexOf(filter.assessmentID) > -1)
+                                && (!filter.name || item.name.indexOf(filter.name) > -1)
+                                && (!filter.deadline || item.deadline.indexOf(filter.deadline) > -1)
+                                && (!filter.totalMarks || item.totalMarks.indexOf(filter.totalMarks) > -1)
+                                && (!filter.passingMarks || item.passingMarks.indexOf(filter.passingMarks) > -1)
+                                && (!filter.assessmentType || item.assessmentType.indexOf(filter.assessmentType) > -1)
 
 
-                            });
-                            //response.push({"token" : "\"" + localStorage.getItem("token") + "\"" });
-                            data.resolve(response);
-                            console.log(response);
                         });
-                        return data.promise();
-                    },
-                    insertItem: function (item) {
-
-                        return $.ajax({
-                            type: "POST",
-                            url: "/teacher/addTest/"+<%= id %>,
-                            data: item
-                        }).done(function () {
-                            $("#jsGrid").jsGrid("loadData");
-                        });
-                    },
-                    updateItem: function (item) {
-
-                        return $.ajax({
-                            type: "POST",
-                            url: "/teacher/updateTest",
-                            data: item
-                        }).done(function () {
-                            $("#jsGrid").jsGrid("loadData");
-                        });
-                    },
-                    deleteItem: function (item) {
-                        item.token= localStorage.getItem("token");
-                        return $.ajax({
-                            type: "POST",
-                            url: "/teacher/deleteTest",
-                            data: item
-                        }).done(function () {
-                            $("#jsGrid").jsGrid("loadData");
-                        });
-                    },
+                        //response.push({"token" : "\"" + localStorage.getItem("token") + "\"" });
+                        data.resolve(response);
+                        console.log(response);
+                    });
+                    return data.promise();
                 },
-                fields: [
-                    {name: "assessmentID", title: "ID", type: "text", width: 150, editing: false, itemTemplate: function(value, item) {
-                            var $link = $("<a>").attr("href", "../Questions/"+(value)+"-"+(item.assessmentType)).text(value);
-                            return $($link);
-                        }},
-                    {name: "name", title: "Test Name", type: "text", width: 150, editing: true, validate: { validator: "required", message: "The test name is required"}},
-                    {name: "deadline", title: "Deadline", type: "solRiaDateTimeField", width: 150},
-                    {name: "totalMarks", title: "Total Marks", type: "number", width: 150, editing: true, validate: { validator: "range", message: "The total marks should be between 5 and 100", param: [5, 100]}},
-                    {name: "passingMarks", title: "Passing Marks", type: "number", width: 150, editing: true, validate: { validator: "range", message: "The passing marks should be between 5 and 100", param: [5, 100]}},
-                    {name: "assessmentType", title: "Test Type", type: "select", items: [{Name: "TF", Id: 0}, {Name: "MCQ", Id: 1}, {Name: "LQ", Id: 2}], valueField: "Name", textField: "Name", editing: false},
-                    {type: "control"}
-                ]
+                insertItem: function (item) {
 
-            });
+                    return $.ajax({
+                        type: "POST",
+                        url: "/teacher/addTest/"+<%= id %>,
+                        data: item
+                    }).done(function () {
+                        $("#jsGrid").jsGrid("loadData");
+                    });
+                },
+                updateItem: function (item) {
+
+                    return $.ajax({
+                        type: "POST",
+                        url: "/teacher/updateTest",
+                        data: item
+                    }).done(function () {
+                        $("#jsGrid").jsGrid("loadData");
+                    });
+                },
+                deleteItem: function (item) {
+                    item.token= localStorage.getItem("token");
+                    return $.ajax({
+                        type: "POST",
+                        url: "/teacher/deleteTest",
+                        data: item
+                    }).done(function () {
+                        $("#jsGrid").jsGrid("loadData");
+                    });
+                },
+            },
+            fields: [
+                {name: "assessmentID", title: "ID", type: "text", width: 150, editing: false, itemTemplate: function(value, item) {
+                        var $link = $("<a>").attr("href", "../Questions/"+(value)+"-"+(item.assessmentType)).text(value);
+                        return $($link);
+                    }},
+                {name: "name", title: "Test Name", type: "text", width: 150, editing: true, validate: { validator: "required", message: "The test name is required"}},
+                {name: "deadline", title: "Deadline", type: "solRiaDateTimeField", width: 150},
+                {name: "totalMarks", title: "Total Marks", type: "number", width: 150, editing: true, validate: { validator: "range", message: "The total marks should be between 5 and 100", param: [5, 100]}},
+                {name: "passingMarks", title: "Passing Marks", type: "number", width: 150, editing: true, validate: { validator: "range", message: "The passing marks should be between 5 and 100", param: [5, 100]}},
+                {name: "assessmentType", title: "Test Type", type: "select", items: [{Name: "TF", Id: 0}, {Name: "MCQ", Id: 1}, {Name: "LQ", Id: 2}], valueField: "Name", textField: "Name", editing: false},
+                {type: "control"}
+            ]
 
         });
 
- //   }//]]>
+    });
+
+    //   }//]]>
 
 
 </script>

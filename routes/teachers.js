@@ -13,8 +13,6 @@ var connection = mysql.createConnection({
     database : 'ASSESS_EASY'
 });
 
-var loggedInTeacher = 1; //This should be a dynamic value coming from the session. For testing purposes, a dummy value is used
-
 //---------------------------------------Start of Class functions-------------------------------------------------------
 
 //display classes
@@ -33,7 +31,7 @@ var sqlgetResultCount = "select count(*) as c from assessment_results where asse
 
 router.get('/getClassesName', function(req, res){
 
-    var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + loggedInTeacher; //To get all the classes taught by a teacher
+    var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + res.req.user.user_id; //To get all the classes taught by a teacher
 
     connection.query(sqlGetTeacherClasses, function (err, result, fields) {
         if(err) throw err;
@@ -45,7 +43,7 @@ router.get('/getClassesName', function(req, res){
 
 router.post('/addClass', function (req, res) {
 
-    var sqlInsertClass = "INSERT INTO classes (name, createdOn, createdBy) values('" + req.body.name + "', now(), " + loggedInTeacher + ")";
+    var sqlInsertClass = "INSERT INTO classes (name, createdOn, createdBy) values('" + req.body.name + "', now(), " + res.req.user.user_id + ")";
 
     connection.query(sqlInsertClass, function (err, result, fields) {
        if(err) throw err;
@@ -86,7 +84,7 @@ router.post('/deleteClass', function (req, res) {
 
 router.get('/getTestsName/:id', function(req, res){
 
-   var sqlGetClassTests = "SELECT * FROM assessment where assessment.assessmentID IN (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = "+ req.params.id +")"; //To get all the tests belonging to one class
+   var sqlGetClassTests = "SELECT * FROM assessment where assessment.assessmentID IN (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = " + req.params.id +")"; //To get all the tests belonging to one class
 
     connection.query(sqlGetClassTests, function (err, result, fields) {
         if(err) throw err;
@@ -99,8 +97,17 @@ router.get('/getTestsName/:id', function(req, res){
 
 router.post('/addTest/:id', function (req, res) {
 
-    //console.log("kfnwjefnwejf: "+ req.body.deadline.split(" ")[0]);
-    var sqlInsertClassTest = "INSERT INTO assessment (name, deadline, totalMarks, passingMarks, assessmentType) VALUES ('" + req.body.name + "', '2018-01-04', " + req.body.totalMarks + ", " + req.body.passingMarks + ", '" + req.body.assessmentType + "')";
+    var d = new Date(req.body.deadline),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    //console.log(year+"-"+month+"-"+day);
+
+    var sqlInsertClassTest = "INSERT INTO assessment (name, deadline, totalMarks, passingMarks, assessmentType) VALUES ('" + req.body.name + "', '" + year + "-" + month + "-" + day + "', " + req.body.totalMarks + ", " + req.body.passingMarks + ", '" + req.body.assessmentType + "')";
 
     connection.query(sqlInsertClassTest, function (err, result, fields) {
        if(err) throw err;
@@ -108,7 +115,7 @@ router.post('/addTest/:id', function (req, res) {
     });
 
     //Adding into notification table for Kriti
-    var sqlInsertNotification = "INSERT INTO notification (message, type, createdon) VALUES (CONCAT((SELECT name FROM classes WHERE classID = " + req.params.id + "), ' test added'), '" + req.body.assessmentType + "', now())";
+    var sqlInsertNotification = "INSERT INTO notification (message, type, createdon) VALUES (CONCAT((SELECT name FROM classes WHERE classID = " + req.params.id + "), ' test added'), 'test', now())";
 
     connection.query(sqlInsertNotification, function (err, result, fields) {
        if(err) throw err;
@@ -128,7 +135,15 @@ router.post('/addTest/:id', function (req, res) {
 
 router.post('/updateTest', function (req, res) {
 
-    var sqlUpdateTest = "UPDATE assessment SET name = '" + req.body.name + "', deadline = '" + req.body.deadline + "', totalMarks = " + req.body.totalMarks + ", passingMarks = " + req.body.passingMarks + " WHERE assessmentID = " + req.body.assessmentID;
+    var d = new Date(req.body.deadline),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    var sqlUpdateTest = "UPDATE assessment SET name = '" + req.body.name + "', deadline = '" + year + "-" + month + "-" + day + "', totalMarks = " + req.body.totalMarks + ", passingMarks = " + req.body.passingMarks + " WHERE assessmentID = " + req.body.assessmentID;
 
     connection.query(sqlUpdateTest, function (err, result, fields) {
        if(err) throw err;

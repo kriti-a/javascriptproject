@@ -3,6 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="2b893e5f-6fe0-4044-9033-e14190ad1237" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/registration.js" afterPath="$PROJECT_DIR$/routes/registration.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/teachers.js" afterPath="$PROJECT_DIR$/routes/teachers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/side_menu.ejs" afterPath="$PROJECT_DIR$/views/side_menu.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/teacher/viewClasses.ejs" afterPath="$PROJECT_DIR$/views/teacher/viewClasses.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/teacher/viewLongQuestions.ejs" afterPath="$PROJECT_DIR$/views/teacher/viewLongQuestions.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/teacher/viewMCQQuestions.ejs" afterPath="$PROJECT_DIR$/views/teacher/viewMCQQuestions.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/teacher/viewTests.ejs" afterPath="$PROJECT_DIR$/views/teacher/viewTests.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/teacher/viewTrueFalseQuestions.ejs" afterPath="$PROJECT_DIR$/views/teacher/viewTrueFalseQuestions.ejs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -56,10 +64,10 @@
       <list>
         <option value="$PROJECT_DIR$/routes/registration.js" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/views/side_menu.ejs" />
         <option value="$PROJECT_DIR$/routes/teacher_dashboard.js" />
         <option value="$PROJECT_DIR$/public/css/style.css" />
         <option value="$PROJECT_DIR$/views/teacher_dashboard.ejs" />
+        <option value="$PROJECT_DIR$/views/side_menu.ejs" />
       </list>
     </option>
   </component>
@@ -74,7 +82,7 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="331" />
     <option name="y" value="316" />
     <option name="width" value="1382" />
@@ -200,7 +208,7 @@
     <option name="totallyTimeSpent" value="11368000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />

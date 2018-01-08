@@ -28,7 +28,7 @@
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <!-- teacher dashboard -->
-            <% if(accessType == 1) { console.log("from side menu  "+accessType); %>
+            <% if(accessID == 1) { %>
             <ul class="nav" id="side-menu" id="teachersNav">
                 <li>
                     <a href="/teacher_d"><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
@@ -41,7 +41,7 @@
                 </li>
 
             </ul>
-            <% } else { console.log("from side menu  "+accessType); %>
+            <% } else {  %>
 
 
             <!-- student dashboard -->
@@ -63,7 +63,7 @@
                 </li>
 
             </ul>
-            <% }  %>
+            <% } %>
         </div>
         <!-- /.sidebar-collapse -->
     </div>
