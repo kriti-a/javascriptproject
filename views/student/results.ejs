@@ -45,7 +45,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% var a ='a'; result.forEach((result) => { %>
+                <% var a ='a';
+                if(result !=0){
+                result.forEach((result) => { %>
                 <tr style="border-color: transparent">
                     <td style="border:none;padding: 15px;"><%= result.Name %></td>
                     <td style="border:none;padding: 15px;"><%= result.Total %></td>
@@ -57,8 +59,14 @@
                         <span style="background-color: #a94442" class="badge badge-danger"><%= result.Results %></span>
                         <% } %> </td>
                 </tr>
-                <% }) %>
+                <% }) }
 
+                else {%>
+
+                    <td colspan="5" class="alert alert-danger" style="border:none;padding: 15px;text-align: center"><p>There are no results yet.</p></td>
+
+
+                <% }%>
                 </tbody>
             </table>
         </div>

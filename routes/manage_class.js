@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 router.get('/manage_class', function(req, res) {
 connection.query('select * from classes ;',
         function (err, result) {
-            connection.query('select  * from user_class where userID = 1;',
+            connection.query('select  * from user_class where userID = ' +res.req.user.user_id,
             function (err, studentClasses) {
                 var temp=[];
                 for (var i=0; i<result.length; i++)
@@ -29,9 +29,9 @@ connection.query('select * from classes ;',
                     }
                 }
                 var studentdata = JSON.stringify(temp);
-                var accessType = res.req.user.accessType;
+                var accessID = res.req.user.accessID;
                 if (err) throw err;
-                res.render('manage_class', {classes: result, studentsInfo:studentdata,accessType : accessType});
+                res.render('manage_class', {classes: result, studentsInfo:studentdata,accessID : accessID});
             });
         });
 });

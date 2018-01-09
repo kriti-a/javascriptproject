@@ -47,18 +47,31 @@ router.get('/stu_teach_dashboard', authenticationMiddleware(), function(req, res
 
 router.post('/login',
     passport.authenticate('local'), function(req, res) {
-        connection.query('select * from users inner join user_access on user_access.userID = users.userID inner join access_level on access_level.accessID = user_access.accessID where users.userID=' +res.req.user.user_id,
-            function (err, userAcessInfo) {
-                if (err) throw err;
-                for (var i in userAcessInfo) {
-                    var acessType = userAcessInfo[i].accessType;
-                }
-                if(acessType === '1'){
-                    res.redirect('/teacher_d');
-                } else {
-                    res.redirect('/student_dashboard');
-                }
-                });
+        if (req.user.error == 'no')
+        {
+            res.redirect('/login');
+        }
+
+        else{
+
+
+            connection.query('select * from users inner join user_access on user_access.userID = users.userID where users.userID=' +res.req.user.user_id,
+                function (err, userAcessInfo) {
+                    if (err){
+                        console.log("if err");
+                        res.render('/login');
+                    }
+
+                    for (var i in userAcessInfo) {
+                        var accessIDinfo = userAcessInfo[i].accessID;
+                        res.req.user.accessID = accessIDinfo;
+                    }
+                    if(accessIDinfo === 1){
+                        res.redirect('/teacher_d');
+                    } else {
+                        res.redirect('/student_dashboard');
+                    }
+                });}
     });
 
 router.get('/logout', function(req, res) {
@@ -68,29 +81,29 @@ router.get('/logout', function(req, res) {
 });
 
 passport.use(new LocalStrategy({
-    usernameField: 'email'
-},
+        usernameField: 'email'
+    },
     function(email, password, done){
-       console.log(email);
-       console.log(password);
+        console.log(email);
+        console.log(password);
         const db = "SELECT userID, password FROM users WHERE email = ?";
         connection.query(db, [email], function(err, results, fields) {
-           if (err) {done(err)};
+            if (err) {done(err)};
 
-           if (results.length === 0) {
-                done(null, false);
+            if (results.length === 0) {
+                done(null, {error: 'no'});
             } else {
-               const hash = results[0].password.toString();
+                const hash = results[0].password.toString();
 
-               bcrypt.compare(password, hash, function (err, response) {
-                   if (response === true) {
-                       return done(null, {user_id: results[0].userID});
-                   } else {
-                       return done(null, false);
-                   }
-               });
+                bcrypt.compare(password, hash, function (err, response) {
+                    if (response === true) {
+                        return done(null, {user_id: results[0].userID});
+                    } else {
+                        return done(null, false);
+                    }
+                });
 
-           }
+            }
         })
 
 
@@ -109,47 +122,57 @@ router.post('/registration', function(req, res) {
     req.checkBody('passwordMatch', 'Passwords do not match, please try again.').equals(req.body.password);
 
 
-        const errors = req.validationErrors();
-        if (errors){
-            console.log('errors:' + JSON.stringify(errors));
-            res.render('registration', {
-                title: 'Registration Error',
-                //erro1: 'Firstname field cannot be empty.',
-                errors: errors
+    const errors = req.validationErrors();
+    if (errors){
+        console.log('errors:' + JSON.stringify(errors));
+        res.render('registration', {
+            title: 'Registration Error/ Please try again',
+            //erro1: 'Firstname field cannot be empty.',
+            errors: errors
 
-            });
-          //  console.log(errors.toString());
-        }
-        else{
-            const firstName = req.body.firstName;
-            const lastName = req.body.lastName;
-            const email = req.body.email;
-            const password = req.body.password;
+        });
+        //  console.log(errors.toString());
+    }
+    else{
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const email = req.body.email;
+        const password = req.body.password;
 
-            const insertuser = "INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
-            const validuser = "SELECT LAST_INSERT_ID() as user_id";
+        const insertuser = "INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
+        const validuser = "SELECT LAST_INSERT_ID() as user_id";
 
-            bcrypt.hash(password, saltRounds, function(err, hash) {
-                connection.query(insertuser, [firstName, lastName, email, hash], function (error, results, fields) {
+        bcrypt.hash(password, saltRounds, function(err, hash) {
+            connection.query(insertuser, [firstName, lastName, email, hash], function (error, results, fields) {
+                if (error) throw error;
+
+                connection.query(validuser, function(error, results, fields) {
                     if (error) throw error;
 
-                    connection.query(validuser, function(error, results, fields) {
-                        if (error) throw error;
+                    const userID =results[0];
+                    console.log(results[0]);
 
-                        const user_id =results[0];
-                        console.log(results[0]);
-                        req.login(user_id, function(err) {
-                            res.redirect('/student_dashboard');
+                    if (email.match(/^[\w\.\+_-]+[\w]+@(fh-kiel)\.de$/)) {
+
+                        req.login(userID, function(err) {
+                            connection.query("INSERT INTO user_access (userID, accessID) SELECT LAST_INSERT_ID(), '1' FROM users")
+                            res.req.user.accessID = '1';
+                            res.redirect('/teacher_d');// Redirect to teachers dashboard
                         });
+                    } else {
+                        req.login(userID, function(err) {
+                            connection.query("INSERT INTO user_access (userID, accessID) SELECT LAST_INSERT_ID(), '2' FROM users")
+                            res.req.user.accessID = '2';
+                            res.redirect('/student_dashboard');// Redirect to student dashboard
+                        });
+                    }
+
+                });
 
 
-                        //res.render('stu_teach_dashboard', {title: "Success"});
-                    });
-
-
-                })
-            });
-        }
+            })
+        });
+    }
 
 
 
@@ -168,9 +191,9 @@ function authenticationMiddleware() {
     return (req, res, next) => {
         console.log(`
         req.session.passport.user:) ${JSON.stringify(req.session.passport)}`);
-         if (req.isAuthenticated()) return next();
-         res.redirect('/login')
-        
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
     }
 }
 

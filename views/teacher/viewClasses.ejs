@@ -1,4 +1,4 @@
-<% include ../header.ejs %>
+    <% include ../header.ejs %>
 <head>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/metisMenu.min.css" rel="stylesheet">
@@ -8,18 +8,69 @@
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
     <!-- scripts -->
-    <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/metisMenu.min.js"></script>
-    <script src="../../js/raphael.min.js"></script>
-    <script src="../../js/morris.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
 
+
+    <script type="text/javascript">
+        function gotochat(id){
+            window.location.href = "../../chat/"+id;
+        }
+    </script>
 </head>
 <body>
 
-<% include ../side_menu.ejs%>
+<div id="wrapper">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Assess Easy</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <!-- teacher dashboard -->
+                <ul class="nav" id="side-menu" id="teachersNav">
+                    <li>
+                        <a href="/teacher_d"><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="/viewClasses"><i class="fa fa-bar-chart-o fa-fw"></i> Manage Class</a>
+                    </li>
+                    <li>
+                        <a href="../../teacher/assessments"><i class="fa fa-edit fa-fw"></i>Upload Results</a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+
 <div id="jsGrid_users" style="margin-left: 250px;"></div>
+</div>
 
 <script>
     $("#jsGrid_users").jsGrid({
@@ -87,8 +138,18 @@
                     var $link = $("<a>").attr("href", "viewTests/"+(value)).text(value);
                     return $($link);
                 }},
-            {name: "name", title: "Class Name", type: "text", width: 150, editing: true, validate: { validator: "required", message: "The class name is required."}},
-            {type: "control"}
+            {name: "name", title: "Class Name", type: "text", width: 150, editing: true},
+            {type: "control", width: 50, itemTemplate: function(value, item) {
+                var $result = jsGrid.fields.control.prototype.itemTemplate.apply(this, arguments);
+
+                var $link = $("<button>")
+                    .attr({class: "btn btn-success btn-sm"})
+                    .click(function (e) {
+                        gotochat(item.classID);
+                    });
+                var $span = $("<span>").addClass("fa fa-comments fa-fw");
+                return $result.add(($link).append($span));
+            }}
         ]
     });
 </script>

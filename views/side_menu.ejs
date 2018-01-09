@@ -1,7 +1,3 @@
-
-
-
-
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -32,10 +28,10 @@
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <!-- teacher dashboard -->
-            <% if(accessType == 1) { %>
+            <% if(accessID == 1) { %>
             <ul class="nav" id="side-menu" id="teachersNav">
                 <li>
-                    <a href=""><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
+                    <a href="/teacher_d"><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
                 </li>
                 <li>
                     <a href="/viewClasses"><i class="fa fa-bar-chart-o fa-fw"></i> Manage Class</a>
@@ -45,7 +41,9 @@
                 </li>
 
             </ul>
-        <% } else { %>
+            <% } else {  %>
+
+
             <!-- student dashboard -->
             <ul class="nav" id="side-menu" id="studentsNav">
                 <li>
@@ -65,7 +63,7 @@
                 </li>
 
             </ul>
-            <% }  %>
+            <% } %>
         </div>
         <!-- /.sidebar-collapse -->
     </div>

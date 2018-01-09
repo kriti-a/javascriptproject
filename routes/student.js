@@ -6,6 +6,7 @@ var express    = require('express'),
 
 var router = express.Router();
 
+
 //Set up data connection
 var connection = mysql.createConnection({
     host     : 'localhost',
@@ -74,18 +75,26 @@ var sqlgetallclasses = "select class.name as name, uclass.classid as classid, (s
 var sqlremovestudentClass = "Delete from user_class where userid = ? and classId = ?";
 
 
-router.get('/results', function (req, res) {
-    var accessType = res.req.user.accessType;
+router.get('/results',authenticationMiddleware(), function (req, res) {
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
+    console.log()
     connection.query(sqlgetresults, userid, function (err, result) {
         if(err) throw err;
-        res.render('student/results', {result: result, accessType : accessType})
+        if (result.length == 0)
+        {
+            res.render('student/results', {result: 0, accessID : accessID})
+        }
+        else {
+            res.render('student/results', {result: result, accessID : accessID})
+        }
+
     });
 });
 
 
-router.get('/assessments', function (req, res) {
-    var accessType = res.req.user.accessType;
+router.get('/assessments',authenticationMiddleware(), function (req, res) {
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
     connection.query(sqlgetalltests, userid, function (err, result) {
         if(err) throw err;
@@ -93,17 +102,24 @@ router.get('/assessments', function (req, res) {
         //if the parameter shouts success
         if (a=='sc')
         {
-            res.render('student/alltests', {result: result, message:'success', accessType : accessType})
+            res.render('student/alltests', {result: result, message:'success', accessID : accessID})
         }
         //if the parameter says failure
         else if (a=='fl')
         {
-            res.render('student/alltests', {result: result, message : 'error', accessType : accessType})
+            res.render('student/alltests', {result: result, message : 'error', accessID : accessID})
         }
         //if there is no parameter
         else if (a==null)
         {
-            res.render('student/alltests', {result: result, accessType : accessType})
+            if (result.length == 0)
+            {
+                res.render('student/alltests', {result: 0, accessID : accessID})
+            }
+            else {
+                res.render('student/alltests', {result: result, accessID : accessID})
+            }
+
         }
 
     });
@@ -111,103 +127,110 @@ router.get('/assessments', function (req, res) {
 });
 
 
-router.get('/givetest/:id', function (req, res) {
-    var accessType = res.req.user.accessType;
+router.get('/givetest/:id',authenticationMiddleware(), function (req, res) {
+    var accessID = res.req.user.accessID;
     assessmentid = req.params.id;
     var userid = req.session.passport.user.user_id;
     connection.query(selectifalreadysubmitted, [userid, assessmentid], function (err, result) {
         if(err) throw err;
-       if ( parseInt(result[0].C) == 0) {
-          connection.query(sqlgetassessmentdeadline, assessmentid, function (err, result) {
-              if (err) throw err;
-              var d1 = new Date();
-              var d2 = result[0].deadline;
-              if (d1 < d2) {
-                  connection.query(sqlgetassessmenttype, [req.params.id], function (err, result) {
-                      if (err) throw err;
-                      if (parseInt(result[0].asstype) == 1) {
-                          connection.query(sqlgettestquestions, [req.params.id], function (err, result) {
-                              if (err) throw err;
-                              var assname = result[0].Name;
-                              result = shuffle(result);
-                              res.render('student/longtest', {result: result, assname: assname, accessType : accessType})
-                          });
-                      }
-                      else if (parseInt(result[0].asstype) == 2) {
-                          connection.query(sqlgetmcqtestquestions, [req.params.id], function (err, result) {
-                              if (err) throw err;
+        if ( parseInt(result[0].C) == 0) {
+            connection.query(sqlgetassessmentdeadline, assessmentid, function (err, result) {
+                if (err) throw err;
+                var d1 = new Date();
+                var d2 = result[0].deadline;
+                if (d1 < d2) {
+                    connection.query(sqlgetassessmenttype, [req.params.id], function (err, result) {
+                        if (err) throw err;
+                        if (result[0].asstype == 'LQ') {
+                            connection.query(sqlgettestquestions, [req.params.id], function (err, result) {
+                                if (err) throw err;
+                                var assname = result[0].Name;
+                                result = shuffle(result);
+                                res.render('student/longtest', {result: result, assname: assname, accessID : accessID})
+                            });
+                        }
+                        else if (result[0].asstype == 'MCQ') {
+                            connection.query(sqlgetmcqtestquestions, [req.params.id], function (err, result) {
+                                if (err) throw err;
 
-                              var assname = result[0].Name;
-                              var list = [];
-                              var arr = [];
-                              var newresult = [];
+                                var assname = result[0].Name;
+                                var list = [];
+                                var arr = [];
+                                var newresult = [];
 
-                              for (var i = 0; i < 4; i++) {
-                                  list.push(i);
-                              }
+                                for (var i = 0; i < 4; i++) {
+                                    list.push(i);
+                                }
 
-                              for (var i = 0; i < result.length; i++) {
-                                  list = shuffle(list);
-                                  arr[list[0]] = result[i].Correct;
-                                  arr[list[1]] = result[i].OptionB;
-                                  arr[list[2]] = result[i].OptionC;
-                                  arr[list[3]] = result[i].OptionD;
-                                  newresult.push({
-                                      assname: assname,
-                                      Text: result[i].Text,
-                                      optionA: arr[0]
-                                      ,
-                                      optionB: arr[1],
-                                      optionC: arr[2],
-                                      optionD: arr[3],
-                                      QuestionID: result[i].QuestionID,
-                                      Marks: result[i].Marks
-                                  });
-                              }
-                              //    console.log(newresult);
-                             // newresult = shuffle(newresult);
-                              res.render('student/mcqtest', {result: newresult, assname: assname, accessType : accessType})
-                          });
+                                for (var i = 0; i < result.length; i++) {
+                                    list = shuffle(list);
+                                    arr[list[0]] = result[i].Correct;
+                                    arr[list[1]] = result[i].OptionB;
+                                    arr[list[2]] = result[i].OptionC;
+                                    arr[list[3]] = result[i].OptionD;
+                                    newresult.push({
+                                        assname: assname,
+                                        Text: result[i].Text,
+                                        optionA: arr[0]
+                                        ,
+                                        optionB: arr[1],
+                                        optionC: arr[2],
+                                        optionD: arr[3],
+                                        QuestionID: result[i].QuestionID,
+                                        Marks: result[i].Marks
+                                    });
+                                }
+                                //    console.log(newresult);
+                                // newresult = shuffle(newresult);
+                                res.render('student/mcqtest', {result: newresult, assname: assname, accessID : accessID})
+                            });
 
-                      }
-                      else if (parseInt(result[0].asstype) == 3) {
-                          connection.query(sqlgettfquestions, [req.params.id], function (err, result) {
-                              if (err) throw err;
-                              var assname = result[0].Name;
-                           //   result = shuffle(result);
-                              res.render('student/tftest', {result: result, assname: assname, accessType : accessType})
-                          });
-                      }
-                  });
-              }
-              else {
-                  res.render('student/deadlinepassed', {accessType : accessType});
-              }
+                        }
+                        else if (result[0].asstype == 'TF') {
+                            connection.query(sqlgettfquestions, [req.params.id], function (err, result) {
+                                if (err) throw err;
+                                var assname = result[0].Name;
+                                //   result = shuffle(result);
+                                res.render('student/tftest', {result: result, assname: assname, accessID : accessID})
+                            });
+                        }
+                    });
+                }
+                else {
+                    res.render('student/deadlinepassed', {accessID : accessID});
+                }
 
-          });
+            });
         }
         else {
-            res.render('student/alreadysubmitted', {accessType : accessType})
+            res.render('student/alreadysubmitted', {accessID : accessID})
         }
     });
 
 });
 
 
-router.get('/classes', function (req, res) {
-    var accessType = res.req.user.accessType;
+router.get('/classes',authenticationMiddleware(), function (req, res) {
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
     connection.query(sqlgetallclasses, userid, function (err, result) {
         if(err) throw err;
-        res.render('student/allclasses', {result: result, accessType : accessType})
+        if (result.length == 0)
+        {
+            res.render('student/allclasses', {result: 0, accessID : accessID})
+        }
+        else {
+            res.render('student/allclasses', {result: result, accessID : accessID})
+        }
+
     });
 });
 
 //redirecting to the add new record page.
 router.post('/addanswer', function(req, res) {
-    var accessType = res.req.user.accessType;
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
-  for (var i = 0;i<req.body.answer.length;i++)
+    for (var i = 0;i<req.body.answer.length;i++)
     {
         var answer = req.body.answer[i];
         var questionid = req.body.questionid[i];
@@ -221,7 +244,7 @@ router.post('/addanswer', function(req, res) {
 });
 
 router.post('/addtf', function(req, res) {
-    var accessType = res.req.user.accessType;
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
     for (var i = 0;i<req.body.questionid.length;i++)
     {
@@ -237,7 +260,7 @@ router.post('/addtf', function(req, res) {
 });
 
 router.post('/addmcq', function(req, res) {
-    var accessType = res.req.user.accessType;
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
     console.log(req.body);
     for (var i = 0;i<req.body.questionid.length;i++)
@@ -253,15 +276,15 @@ router.post('/addmcq', function(req, res) {
 });
 
 
-router.get('/removeuser/:id', function(req, res) {
-    var accessType = res.req.user.accessType;
+router.get('/removeuser/:id',authenticationMiddleware(), function(req, res) {
+    var accessID = res.req.user.accessID;
     var userid = req.session.passport.user.user_id;
     var classid  = req.params.id;
 
-        connection.query(sqlremovestudentClass, [userid,classid], function (err, result) {
-            if(err) throw err;
-            res.redirect('../classes');
-       });
+    connection.query(sqlremovestudentClass, [userid,classid], function (err, result) {
+        if(err) throw err;
+        res.redirect('../classes');
+    });
 
 
 
@@ -289,4 +312,13 @@ function shuffle(array) {
     return array;
 }
 
+
+function authenticationMiddleware() {
+    return (req, res, next) => {
+
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
+    }
+}
 module.exports = router;

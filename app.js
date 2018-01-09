@@ -144,8 +144,8 @@ var name = "";
 var room = "";
 var groupid;
 
-app.get('/chat/:id', function(req, res) {
-    var accessType = res.req.user.accessType;
+app.get('/chat/:id', authenticationMiddleware(), function(req, res) {
+    var accessID = res.req.user.accessID;
     groupid = req.params.id;
     userid = req.session.passport.user.user_id;
     connection.query(sqlgetemail, userid, function (err, result) {
@@ -154,18 +154,18 @@ app.get('/chat/:id', function(req, res) {
         else
         {
             name = result[0].email;
-            res.render('chatroom/chatroom', {accessType : accessType});
+            res.render('chatroom/chatroom', {accessID : accessID});
         }
     });
 
 });
 
-app.get('/chat/history/:id', function(req, res) {
-    var accessType = res.req.user.accessType;
+app.get('/chat/history/:id',authenticationMiddleware(), function(req, res) {
+    var accessID = res.req.user.accessID;
     groupid = req.params.id;
        connection.query(sqlgetchathistory, groupid, function (err, result) {
         if (err) throw err;
-        res.render('chatroom/chathistory', {result: result, accessType : accessType});
+        res.render('chatroom/chathistory', {result: result, accessID : accessID});
     });
 
 });
@@ -177,7 +177,12 @@ io.on('connection', function (socket) {
    room = groupid;
     socket.room = room;
     socket.join(room);
-    users.push(socket.username);
+    if (users.indexOf(socket.username) > -1) {
+
+    } else {
+        users.push(socket.username);
+    }
+
     updateUsernames();
     socket.broadcast.to(socket.room).emit('updatechat',{ msg: socket.username + ' has joined the chat'});
 
@@ -213,7 +218,14 @@ io.on('connection', function (socket) {
 
 });
 
+function authenticationMiddleware() {
+    return (req, res, next) => {
 
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
+    }
+}
 
 // ----------------------------------------- Chat ends here --------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------
@@ -221,4 +233,6 @@ io.on('connection', function (socket) {
 
 server.listen(process.env.PORT || 3000);
 console.log("Server is running ... ");
+
 //module.exports = app;
+
