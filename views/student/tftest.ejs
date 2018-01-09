@@ -11,6 +11,7 @@
     <script src="../../js/metisMenu.min.js"></script>
     <script src="../../js/raphael.min.js"></script>
     <script src="../../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>Results</title>
     <script>
 
@@ -44,7 +45,7 @@
                                             <td style="border:none;padding: 15px;">
                                                 <input value="<%= result.QuestionID%>" name="questionid[]" class="form-control" type="hidden" />
                                                 <label class="form-check-input" class="form" for="<%= result.QuestionID%>"><%= result.Text %></label><br>
-                                                <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="True"> True<br>
+                                                <input checked="checked" class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="True"> True<br>
                                                 <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="False"> False<br>
                                                <small class="form-text text-muted">Total Marks: <%= result.Marks %></small>
                                             </td>
@@ -53,7 +54,7 @@
                                         <% })%>
                                         </tbody>
                                     </table>
-                                    <button type="submit" class="btn btn-success" >Submit</button>
+                                    <button type="button" onclick="submittest()" class="btn btn-success" >Submit</button>
                                     <button type="button" onclick="goback()" class="btn btn-danger" >Cancel</button>
                                 </div>
                             </form>

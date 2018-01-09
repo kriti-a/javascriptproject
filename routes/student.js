@@ -71,6 +71,8 @@ var sqlgettfquestions = "SELECT a.name as 'Name',\n" +
     "a.assessmentID = tfaq.assessmentID  where  tfaq.assessmentID = ?";
 
 var sqlgetallclasses = "select class.name as name, uclass.classid as classid, (select concat(firstname,' ', lastname) from users where userid = class.createdBy) as createdby from user_class uclass inner join classes class on class.classID = uclass.classId where userid = ?";
+var sqlremovestudentClass = "Delete from user_class where userid = ? and classId = ?";
+
 
 router.get('/results', function (req, res) {
     var accessType = res.req.user.accessType;
@@ -249,6 +251,23 @@ router.post('/addmcq', function(req, res) {
     res.redirect('../student/assessments?lg=sc');
 
 });
+
+
+router.get('/removeuser/:id', function(req, res) {
+    var accessType = res.req.user.accessType;
+    var userid = req.session.passport.user.user_id;
+    var classid  = req.params.id;
+
+        connection.query(sqlremovestudentClass, [userid,classid], function (err, result) {
+            if(err) throw err;
+            res.redirect('../classes');
+       });
+
+
+
+});
+
+
 
 function shuffle(array) {
     var counter = array.length;

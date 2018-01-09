@@ -11,11 +11,29 @@
     <script src="../../js/metisMenu.min.js"></script>
     <script src="../../js/raphael.min.js"></script>
     <script src="../../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>Results</title>
     <script>
 
         function goback() {
             window.location.href = "../assessments";
+        }
+
+        function submittest() {
+            console.log("here");
+            swal({
+                title: "Are you sure?",
+                text: "You would not be able to make any changes.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                if (willDelete) {
+                    document.a.submit();
+                }
+            });
+
         }
     </script>
     </head>
@@ -58,7 +76,7 @@
                         <% })%>
                         </tbody>
                     </table>
-                        <button type="submit" class="btn btn-success" >Submit</button>
+                        <button type="button" onclick="submittest()" class="btn btn-success" >Submit</button>
                             <button type="button" onclick="goback()" class="btn btn-danger" >Cancel</button>
 
                     </form>

@@ -139,6 +139,7 @@ var connections = [];
 var userid;
 var sqlgetemail = "select email from users where userid =?";
 var insertintodb = "INSERT INTO status (s_text, classid,userid ) VALUES (?,?,?)";
+var sqlgetchathistory = "select s_text as text, userid as user from status s where classid = ?";
 var name = "";
 var room = "";
 var groupid;
@@ -159,6 +160,15 @@ app.get('/chat/:id', function(req, res) {
 
 });
 
+app.get('/chat/history/:id', function(req, res) {
+    var accessType = res.req.user.accessType;
+    groupid = req.params.id;
+       connection.query(sqlgetchathistory, groupid, function (err, result) {
+        if (err) throw err;
+        res.render('chatroom/chathistory', {result: result, accessType : accessType});
+    });
+
+});
 
 
 io.on('connection', function (socket) {
@@ -177,15 +187,13 @@ io.on('connection', function (socket) {
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket, 1));
-       // console.log('Disconnected: %s sockets connected', connections.length);
+        socket.broadcast.to(socket.room).emit('updatechat',{ msg: socket.username + ' has left the chat'});
     });
 
 
     //Send Message
     socket.on('send message', function (data) {
-        //    add_message(data[0], data[1]);
-       // console.log(data)
-        // io.sockets.emit('new message', {msg: data, user:socket.username});
+       add_message(data, socket.room,socket.username );
         io.sockets.in(socket.room).emit('new message', {msg: data, user: socket.username});
     });
 
@@ -193,6 +201,16 @@ io.on('connection', function (socket) {
     function updateUsernames() {
         io.sockets.emit('get users', users);
     }
+
+    function add_message(message, groupid, userid)
+    {
+        connection.query(insertintodb,[message, groupid, userid],function(err,rows){
+            if(err) {
+                throw err;
+            }
+        });
+    }
+
 });
 
 

@@ -22,6 +22,16 @@
     </style>
     <script>
 
+        function hey() {
+            var url_string = window.location.href.split('/');
+            var gg = url_string[4];
+            window.open(
+                '../chat/history/'+gg,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+
+        }
+
         function goback() {
             window.location.href = "../student/classes";
         }
@@ -30,7 +40,7 @@
 </head>
 <body>
 
-<div id="wrapper">
+<div id="wrapper" style="overflow-x:hidden">
     <% include ../side_menu.ejs %>
 
     <div id="page-wrapper">
@@ -42,11 +52,17 @@
 
                         <div id="messageArea" class="row">
 
-                            <div class="col-md-8" >
-                                <div class="chat" id="chat"></div>
+                            <div class="col-md-8"  >
+
+                                <div class="chat" id="chat" style="height: 380px;overflow-y: auto" ></div>
+
                                 <form id="messageForm">
                                     <div class="form-group" >
                                         <label>Enter Message</label>
+
+                                        <button onclick="hey()" style="float: right;margin-bottom: 5px" type="button" class="btn btn-success btn-sm">
+                                            <span class="fa fa-history fa-fw"></span>
+                                        </button>
                                         <textarea id="message" class="form-control"></textarea>
                                         <br/>
                                         <input type="submit" class="btn btn-success btn-sm" value="Send Message"/>
@@ -90,6 +106,7 @@
 
         socket.on('new message', function (data) {
             $chat.append('<div class="well"><strong>'+data.user+': </strong>'+data.msg+'</div>');
+            $chat.animate({scrollTop: $chat.prop("scrollHeight")}, -500);
         });
 
         socket.on('updatechat', function (data) {

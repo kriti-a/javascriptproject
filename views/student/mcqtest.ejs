@@ -11,11 +11,30 @@
     <script src="../../js/metisMenu.min.js"></script>
     <script src="../../js/raphael.min.js"></script>
     <script src="../../js/morris.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>Results</title>
     <script>
 
         function goback() {
             window.location.href = "../assessments";
+        }
+
+
+        function submittest() {
+            console.log("here");
+            swal({
+                title: "Are you sure?",
+                text: "You would not be able to make any changes.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                if (willDelete) {
+                    document.a.submit();
+                }
+        });
+
         }
     </script>
 </head>
@@ -34,7 +53,7 @@
                     <h3><%= assname %></h3>
                     <div class="form-row">
                         <div class="form-check">
-                            <form action="../addmcq" method="post">
+                            <form action="../addmcq" id="a" name="a" method="post">
                                 <div class="form-group">
                                 <table style="border:none;padding: 130px;border-color:#0000" class="table table-dark">
                                     <tbody>
@@ -44,7 +63,7 @@
                                         <td style="border:none;padding: 15px;">
                                                 <input value="<%= result.QuestionID%>" name="questionid[]" class="form-control" type="hidden" />
                                                 <label class="form-check-input" class="form" for="<%= result.QuestionID%>"><%= result.Text %></label><br>
-                                                <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="<%= result.optionA %>"> <%= result.optionA %><br>
+                                                <input checked="checked" class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="<%= result.optionA %>"> <%= result.optionA %><br>
                                                 <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="<%= result.optionB %>"> <%= result.optionB %><br>
                                                 <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="<%= result.optionC %>"> <%= result.optionC %><br>
                                                 <input class="form-check-input" type="radio" name="option[<%= result.QuestionID%>]" value="<%= result.optionD %>"> <%= result.optionD %><br>
@@ -55,7 +74,7 @@
                                     <% })%>
                                     </tbody>
                                 </table>
-                                <button type="submit" class="btn btn-success" >Submit</button>
+                                <button type="button" onclick="submittest()" class="btn btn-success" >Submit</button>
                                     <button type="button" onclick="goback()" class="btn btn-danger" >Cancel</button>
                                 </div>
                             </form>

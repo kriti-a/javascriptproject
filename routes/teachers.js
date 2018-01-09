@@ -29,6 +29,7 @@ var sqlgetTFAssessmentResults = "select derived2.userid, derived2.assessmentid, 
 var sqlgetLongUserIds = "Select distinct concat(u.firstName, ' ',  u.lastName) as uName, coalesce(assr.obtainedMarks, 0) as 'Obtained',  CASE  WHEN coalesce(assr.obtainedMarks, 0) != 0 THEN 'Added'  ELSE 'Not Added' END as 'results', u.userID,  sass.assessmentID  , CASE WHEN ass.deadline < NOW() then 'Finished' ELSE  'Open' END as deadline from users u   inner join  student_assessment  sass on u.userID = sass.userID  left join  assessment_results assr on assr.assessmentID = sass.assessmentID and u.userID = assr.userID inner join assessment ass on sass.assessmentID = ass.assessmentID where sass.assessmentID = ?  group by u.userid";
 var sqlgetUserLongAssignment = "SELECT sass.userID as userID, loq.lqText as Text,loq.marks as Marks, sass.questionID as questionID, sass.assessmentID as assessmentID, sass.answer as answer FROM student_assessment sass inner join long_questions loq on loq.lqID = sass.questionID WHERE userID = ? AND assessmentID = ?";
 var sqlgetResultCount = "select count(*) as c from assessment_results where assessmentid = ?";
+var sqlgetteacherClasses = "select * from classes where createdBy = ?";
 //----------------------------------------------------
 
 router.get('/getClassesName', function(req, res){
@@ -466,8 +467,6 @@ router.get('/allsubmissions/:id', function (req, res) {
 
 });
 
-
-
 router.get('/studentanswers/:id/:assid', function (req, res) {
     var accessType = res.req.user.accessType;
     assessmentid = req.params.assid;
@@ -486,13 +485,10 @@ router.post('/addresult', function(req, res) {
     var userid = 0;
     for (var i = 0;i<req.body.assessmentid.length;i++)
     {
-
         var marks = parseInt(req.body.marks[i]);
         assessmentid = req.body.assessmentid[i];
         userid = req.body.userid[i];
         total = parseInt(total) + marks;
-
-
     }
 
     connection.query(sqlInsertResults, [assessmentid,userid, total], function (err, result) {
