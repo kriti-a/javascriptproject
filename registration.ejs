@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+</head>
+<style>
+    body{
+        margin: 0;
+        padding: 0;
+        background: url(Online-exams-Reu2.jpg) no-repeat center fixed;
+        background-size: 100% 100%;
+        font-family: sans-serif;
+    }
+    input[type=text], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=email], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=password], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        font-weight: bold;
+        font-size: medium;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+        background-color: #45a049;
+    }
+
+    div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 450px;
+        height: 600px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,.2);
+        padding: 20px;
+    }
+
+    h2{
+        margin: 0;
+        padding: 0 0 20px;
+        color: cyan;
+        text-align: left;
+    }
+    label[for=firstName]{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: #fff;
+    }
+    label[for=lastName]{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: #fff;
+    }
+    label[for=email]{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: #fff;
+    }
+    label[for=password]{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: #fff;
+    }
+    label[for=passwordMatch]{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: #fff;
+    }
+    p{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: white;
+    }
+    a{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: yellow;
+    }
+</style>
+<body>
+<div>
+    <h2><%= title %></h2>
+
+
+
+<form  action="/registration" method="post">
+
+
+
+        <label for="firstName">First Name</label>
+        <input required type="text" name="firstName" placeholder="Enter Your First Name">
+
+
+
+        <label for="lastName">Last Name</label>
+        <input required type="text" name="lastName" placeholder="Enter Your Last Name">
+
+
+
+        <label for="email">Email</label>
+        <input required type="email" name="email" placeholder="Enter your FH Email">
+
+
+
+        <label for="password">Password</label>
+        <input required type="password" name="password" placeholder="Password must be at least six character">
+
+
+
+        <label for="passwordMatch">Re-Enter Password</label>
+        <input required type="password" name="passwordMatch" placeholder="Repeat Password">
+
+
+    <input type="submit" value="Submit">
+    <h1></h1>
+    <p>If you are already registered, Please <a href="/login"> Login here </a>using your FH Email.</p>
+
+
+</form>
+</div>
+</body>
+</html>
