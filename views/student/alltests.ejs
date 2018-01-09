@@ -55,7 +55,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <% result.forEach((result) => { %>
+                        <%
+                        if(result !=0){
+                        result.forEach((result) => { %>
                         <tr style="border-color: transparent">
                             <td style="border:none;padding: 15px;"><%= result.Name %></td>
                             <td style="border:none;padding: 15px;"><%= result.Total %></td>
@@ -67,12 +69,24 @@
                                 <span style="background-color: #a94442" class="badge badge-danger"><%= result.Due %></span>
                                 <% } %> </td>
                             <td style="border:none;padding: 15px;">
+                                <% if(result.Due.toString() == 'Open'){ %>
                                 <button onclick="document.location='givetest/<%= result.id %>'" type="button" class="btn btn-success btn-sm">
                                     <span class="fa fa-pencil fa-fw"></span>
                                 </button>
-                                </td>
+                                <% } else{ %>
+                                <button disabled onclick="document.location='givetest/<%= result.id %>'" type="button" class="btn btn-success btn-sm">
+                                    <span class="fa fa-pencil fa-fw"></span>
+                                </button>
+                                <% } %> </td>
+
                         </tr>
-                        <% }) %>
+                        <% }) } else {%>
+
+                        <td colspan="5" class="alert alert-danger" style="border:none;padding: 15px;text-align: center">
+                            <p>You don't have any assignments yet.</p></td>
+
+
+                        <% }%>
 
                         </tbody>
                     </table>

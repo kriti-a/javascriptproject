@@ -148,12 +148,12 @@
 
 
         <label for="password">Password</label>
-        <input required type="password" name="password" placeholder="Password must be at least six character">
+        <input required type="password" name="password" pattern="^\S{6,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Must have at least 6 characters' : ''); if(this.checkValidity()) form.passwordMatch.pattern = this.value;" placeholder="Password must be at least six character">
 
 
 
         <label for="passwordMatch">Re-Enter Password</label>
-        <input required type="password" name="passwordMatch" placeholder="Repeat Password">
+        <input required type="password" name="passwordMatch" pattern="^\S{6,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords do not match.' : '');" placeholder="Repeat Password">
 
 
     <input type="submit" value="Submit">

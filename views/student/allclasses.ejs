@@ -15,8 +15,30 @@
     <title>Results</title>
 <script>
     function gotochat(id) {
-       document.location = "../../chat/"+id;
+              window.open(
+            '../../chat/'+id,
+            '_blank' // <- This is what makes it open in a new window.
+        );
     }
+    function leaveclass(id) {
+
+        swal({
+            title: "Are you sure?",
+            text: "Do you really want to leave the class?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+            if (willDelete) {
+                document.location='removeuser/'+id;
+            } else {
+                swal("You are still a member of this class.");
+    }
+    });
+       //document.location='removeuser/'+id;
+    }
+
 </script>
 </head>
 
@@ -50,14 +72,16 @@
                             <thead>
                             <tr>
                                 <th style="border:none;padding: 15px;">Class</th>
-                                <th style="border:none;padding: 15px;">Created By</th>
+                                <th style="border:none;padding: 15px;">Teacher</th>
                                 <th style="border:none;padding: 15px;"></th>
                                 <th style="border:none;padding: 15px;"></th>
                                 <th style="border:none;padding: 15px;" ></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <% result.forEach((result) => { %>
+                            <%
+                            if(result !=0){
+                            result.forEach((result) => { %>
                             <tr style="border-color: transparent">
                                 <td style="border:none;padding: 15px;"><%= result.name %></td>
                                 <td style="border:none;padding: 15px;"><%= result.createdby %></td>
@@ -67,14 +91,20 @@
                                     <button onclick="gotochat(<%=result.classid%>)" type="button" class="btn btn-success btn-sm">
                                         <span class="fa fa-comments fa-fw"></span>
                                     </button>
-                                    <button type="button" class="btn btn-danger btn-sm">
+                                    <button type="button" onclick="leaveclass(<%=result.classid%>)" class="btn btn-danger btn-sm">
                                         <span class="fa fa-remove fa-fw"></span>
                                     </button>
                                 </td>
 
                             </tr>
-                            <% }) %>
+                            <% })}
 
+                            else {%>
+
+                            <td colspan="5" class="alert alert-danger" style="border:none;padding: 15px;text-align: center"><p>You haven't joined any classes yet.</p></td>
+
+
+                            <% }%>
                             </tbody>
                         </table>
 
