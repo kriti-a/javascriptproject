@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Login</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+</head>
 <style>
     body{
         margin: 0;
         padding: 0;
-        background: url(Online-exams-Reu2.jpg);
-        background-size: cover;
+        background: url(Online-exams-Reu2.jpg) no-repeat center fixed;
+        background-size: 100% 100%;
         font-family: sans-serif;
     }
     input[type=email], select {
@@ -33,6 +37,8 @@
         background-color: #4CAF50;
         color: white;
         padding: 14px 20px;
+        font-weight: bold;
+        font-size: medium;
         margin: 8px 0;
         border: none;
         border-radius: 4px;
@@ -48,11 +54,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-        width: 350px;
+        width: 400px;
         height: 420px;
         border-radius: 5px;
         box-sizing: border-box;
-        background: rgba(0,0,0,.4);
+        background: rgba(0,0,0,.2);
         padding: 20px;
     }
 
@@ -74,6 +80,18 @@
         font-weight: bold;
         color: #fff;
     }
+    p{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: white;
+    }
+    a{
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: yellow;
+    }
 </style>
 <body>
 
@@ -83,14 +101,19 @@
     <h2><%= title %></h2>
     <form action="/login" method="post">
         <label for="email">Email</label>
-        <input required type="email" name="email" placeholder="Email">
+        <input required type="email" name="email" placeholder="Your FH Email">
+        <h1></h1>
 
         <label for="password">Password</label>
         <input required type="password" name="password" placeholder="Password">
 
-
+        <h1></h1>
 
         <input type="submit" value="Login">
+        <h1></h1>
+
+
+        <p>New for Access Easy? please <a href="/registration"> register here </a>using your FH Email.</p>
     </form>
 </div>
 
