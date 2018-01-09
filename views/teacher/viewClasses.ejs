@@ -1,4 +1,4 @@
-<% include ../header.ejs %>
+    <% include ../header.ejs %>
 <head>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/metisMenu.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
                 <!-- teacher dashboard -->
                 <ul class="nav" id="side-menu" id="teachersNav">
                     <li>
-                        <a href=""><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
+                        <a href="/teacher_d"><i class="fa fa-dashboard fa-fw"></i>Teacher's Dashboard</a>
                     </li>
                     <li>
                         <a href="/viewClasses"><i class="fa fa-bar-chart-o fa-fw"></i> Manage Class</a>
@@ -96,7 +96,6 @@
                     response = $.grep(response, function (item) {
                         return (!filter.classID || item.classID.indexOf(filter.classID) > -1)
                                && (!filter.name || item.name.indexOf(filter.name) > -1)
-                            && (!filter.name || item.name.indexOf(filter.name) > -1)
                     });
                     data.resolve(response);
                     console.log(response);
@@ -139,17 +138,18 @@
                     var $link = $("<a>").attr("href", "viewTests/"+(value)).text(value);
                     return $($link);
                 }},
-            {name: "name", title: "Class Name", type: "text", width: 150, editing: true, validate: { validator: "required", message: "The class name is required."}},
-            {name: "name", title: "Chat", align: "center", itemTemplate: function(value, item) {
-                    var $link = $("<button>")
-                        .attr({class: "btn btn-success btn-sm"})
-                        .click(function (e) {
-                       gotochat(item.classID);
+            {name: "name", title: "Class Name", type: "text", width: 150, editing: true},
+            {type: "control", width: 50, itemTemplate: function(value, item) {
+                var $result = jsGrid.fields.control.prototype.itemTemplate.apply(this, arguments);
+
+                var $link = $("<button>")
+                    .attr({class: "btn btn-success btn-sm"})
+                    .click(function (e) {
+                        gotochat(item.classID);
                     });
-                    var $span = $("<span>").addClass("fa fa-comments fa-fw");
-                    return $($link).append($span)
-                }},
-            {type: "control"}
+                var $span = $("<span>").addClass("fa fa-comments fa-fw");
+                return $result.add(($link).append($span));
+            }}
         ]
     });
 </script>

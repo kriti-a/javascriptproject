@@ -43,6 +43,7 @@ router.get('/getClassesName', function(req, res){
 
 router.post('/addClass', function (req, res) {
 
+    console.log("hi" + res);
     var sqlInsertClass = "INSERT INTO classes (name, createdOn, createdBy) values('" + req.body.name + "', now(), " + res.req.user.user_id + ")";
 
     connection.query(sqlInsertClass, function (err, result, fields) {
@@ -221,13 +222,13 @@ router.post('/updateTrueFalseQuestion', function (req, res) {
 
 router.post('/deleteTrueFalseQuestion', function (req, res) {
 
-    var sqlDeleteTFQuestion = "DELETE FROM tf_questions WHERE tfqID = " + req.body.tfqID + "; DELETE FROM tfassessment_question WHERE questionID = " + req.body.tfqID;
-    //var sqlDeleteTFAssessment = "";
+    var sqlDeleteTFQuestion = "DELETE FROM tf_questions WHERE tfqID = " + req.body.tfqID;
+    var sqlDeleteTFAssessment = " DELETE FROM tfassessment_question WHERE questionID = " + req.body.tfqID;
 
-    //connection.query(sqlDeleteTFQuestion, function (err, result, fields) {
-      // if(err) throw err;
-       //console.log("Question successfully deleted!");
-    //});
+    connection.query(sqlDeleteTFQuestion, function (err, result, fields) {
+       if(err) throw err;
+       console.log("Question successfully deleted!");
+    });
     connection.query(sqlDeleteTFQuestion, function (err, result, fields) {
         if(err) throw err;
         res.json("Row successfully deleted!");
@@ -285,13 +286,13 @@ router.post('/updateMCQQuestion', function (req, res) {
 
 router.post('/deleteMCQQuestion', function (req, res) {
 
-    var sqlDeleteMCQQuestion = "DELETE FROM mc_questions WHERE mcqID = " + req.body.mcqID + "; DELETE FROM mcassessment_question WHERE questionID ="  + req.body.mcqID + "";
-    //var sqlDeleteMCQAssessment = "DELETE FROM mcassessment_question WHERE questionID = " + req.body.mcqID + "";
+    var sqlDeleteMCQQuestion = "DELETE FROM mc_questions WHERE mcqID = " + req.body.mcqID;
+    var sqlDeleteMCQAssessment = "DELETE FROM mcassessment_question WHERE questionID = " + req.body.mcqID + "";
 
-    //connection.query(sqlDeleteMCQQuestion, function (err, result, fields) {
-       // if(err) throw err;
-      //  console.log("Question successfully deleted!");
-    //});
+    connection.query(sqlDeleteMCQQuestion, function (err, result, fields) {
+        if(err) throw err;
+        console.log("Question successfully deleted!");
+    });
     connection.query(sqlDeleteMCQQuestion, function (err, result, fields) {
         if(err) throw err;
         res.json("Row successfully deleted!");
