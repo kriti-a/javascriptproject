@@ -138,7 +138,7 @@
                     var $link = $("<a>").attr("href", "viewTests/"+(value)).text(value);
                     return $($link);
                 }},
-            {name: "name", title: "Class Name", type: "text", width: 150, editing: true},
+            {name: "name", title: "Class Name", type: "text", width: 150, editing: true, validate: {validator: "required", message:"Please enter the class name"}},
             {type: "control", width: 50, itemTemplate: function(value, item) {
                 var $result = jsGrid.fields.control.prototype.itemTemplate.apply(this, arguments);
 

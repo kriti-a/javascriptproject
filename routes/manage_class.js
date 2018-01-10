@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 });
 // ------------------SQL Queries----------------------
 
-router.get('/manage_class', function(req, res) {
+router.get('/manage_class', authenticationMiddleware(), function(req, res) {
 connection.query('select * from classes ;',
         function (err, result) {
             connection.query('select  * from user_class where userID = ' +res.req.user.user_id,
@@ -37,14 +37,24 @@ connection.query('select * from classes ;',
 });
 
 router.post('/joinClass', function(req, res) {
-    const id = req.body.classId;
-    var query =  "Insert into user_class (userID, classID) values(1,'"+id+"')";
+    const classid = req.body.classId;
+    const userid = res.req.user.user_id;
+    var query =  "Insert into user_class (userID, classID) values('"+userid+"','"+classid+"')";
     connection.query(query,
         function (err, result) {
             if (err) throw err;
             res.redirect('/manage_class');
         });
 });
+
+function authenticationMiddleware() {
+    return (req, res, next) => {
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
+    }
+}
+
 
 module.exports = router;
 

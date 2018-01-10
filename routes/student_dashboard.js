@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 });
 // ------------------SQL Queries----------------------
 
-router.get('/student_dashboard', function(req, res) {
+router.get('/student_dashboard', authenticationMiddleware(), function(req, res) {
     connection.query('select * from classes inner join user_class on user_class.classId = classes.classID inner join users on users.userID = user_class.userId and users.userID ='+res.req.user.user_id,
         function (err, result) {
             connection.query('select classes.classID, assessment.assessmentID, assessment.passingMarks, assessment_results.obtainedMarks, users.userID from classes inner join class_assessment on class_assessment.classId = classes.classID inner join assessment on assessment.assessmentID = class_assessment.assessmentID inner join assessment_results on assessment.assessmentID = assessment_results.assessmentID inner join users on users.userID = assessment_results.userID;',
@@ -30,6 +30,15 @@ router.get('/student_dashboard', function(req, res) {
 
         });
 });
+
+function authenticationMiddleware() {
+    return (req, res, next) => {
+
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
+    }
+}
 
 
 module.exports = router;

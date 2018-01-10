@@ -32,7 +32,7 @@ var sqlgetassessmentName = "select name from assessment where assessmentid =?";
 
 //----------------------------------------------------
 
-router.get('/getClassesName', function(req, res){
+router.get('/getClassesName', authenticationMiddleware(), function(req, res){
 
     var sqlGetTeacherClasses = 'SELECT * FROM classes where createdBy = ' + res.req.user.user_id; //To get all the classes taught by a teacher
 
@@ -86,7 +86,7 @@ router.post('/deleteClass', function (req, res) {
 
 //Display tests
 
-router.get('/getTestsName/:id', function(req, res){
+router.get('/getTestsName/:id', authenticationMiddleware(), function(req, res){
 
     var sqlGetClassTests = "SELECT * FROM assessment where assessment.assessmentID IN (SELECT class_assessment.assessmentID FROM class_assessment where class_assessment.classID = " + req.params.id +")"; //To get all the tests belonging to one class
 
@@ -180,7 +180,7 @@ router.post('/deleteTest', function(req, res){
 
 //display true/false questions in a test
 
-router.get('/getTrueFalseQuestions/:id', function (req, res) {
+router.get('/getTrueFalseQuestions/:id', authenticationMiddleware(), function (req, res) {
 
     var sqlGetTFQuestions = "SELECT * FROM tf_questions WHERE tfqID in (SELECT questionID FROM tfassessment_question WHERE assessmentID = " + req.params.id + ")";
 
@@ -245,7 +245,7 @@ router.post('/deleteTrueFalseQuestion', function (req, res) {
 
 //display mcq questions in a test
 
-router.get('/getMCQQuestions/:id', function (req, res) {
+router.get('/getMCQQuestions/:id', authenticationMiddleware(), function (req, res) {
 
     var sqlGetMCQQuestions = "SELECT * FROM mc_questions WHERE mcqID in (SELECT questionID FROM mcassessment_question WHERE assessmentID = " + req.params.id + ")";
     connection.query(sqlGetMCQQuestions, function (err, result, fields) {
@@ -309,7 +309,7 @@ router.post('/deleteMCQQuestion', function (req, res) {
 
 //display long questions in a test
 
-router.get('/getLongQuestions/:id', function (req, res) {
+router.get('/getLongQuestions/:id', authenticationMiddleware(), function (req, res) {
 
     var sqlGetLongQuestions = "SELECT * FROM long_questions WHERE lqID in (SELECT questionID FROM lassessment_question WHERE assessmentID = " + req.params.id + ")";
     connection.query(sqlGetLongQuestions, function (err, result, fields) {

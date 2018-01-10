@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/:id', function(req, res, next) {
+router.get('/:id', authenticationMiddleware(), function(req, res, next) {
     if(req.params.id.split("-")[1] == "LQ")
     {
         res.render('teacher/viewLongQuestions', {id : req.params.id.split("-")[0]});
@@ -16,5 +16,14 @@ router.get('/:id', function(req, res, next) {
         res.render('teacher/viewTrueFalseQuestions', {id : req.params.id.split("-")[0]});
     }
 });
+
+function authenticationMiddleware() {
+    return (req, res, next) => {
+
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
+    }
+}
 
 module.exports = router;

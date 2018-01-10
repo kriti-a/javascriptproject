@@ -44,7 +44,7 @@ var access_id;
 
 
 //redirecting to the teacher_dashboard.ejs
-router.get('/', function(req, res){
+router.get('/', authenticationMiddleware(), function(req, res){
 
     user_id = req.session.passport.user.user_id;
 
@@ -100,5 +100,13 @@ router.get('/', function(req, res){
     });
 });
 
+function authenticationMiddleware() {
+    return (req, res, next) => {
+
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+
+    }
+}
 
 module.exports = router;
